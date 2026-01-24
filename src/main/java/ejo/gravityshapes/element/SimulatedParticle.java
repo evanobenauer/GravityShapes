@@ -16,11 +16,13 @@ public class SimulatedParticle {
     }
 
     public Vector[] getFuturePositions(SimulatedForceCalculation forceCalculation, ManualLinearFutureAttributeModifier attributeModifier) {
-        ArrayList<Vector> vectors = new ArrayList<>();
+        ArrayList<Vector> positions = new ArrayList<>();
 
         Vector simulatedForce;
         Vector futureVelocity = physicsObject.getVelocity();
         Vector futurePos = physicsObject.getPos();
+
+        positions.add(futurePos); //Add initial position to the list? Potentially remove this?
 
         for (int i = 0; i < steps; i++) {
             simulatedForce = forceCalculation.run(physicsObject,futurePos,i);
@@ -28,9 +30,9 @@ public class SimulatedParticle {
             futureVelocity = futureVelocity.getAdded(fakeAcceleration.getMultiplied(physicsObject.getDeltaT()));
             futurePos = futurePos.getAdded(futureVelocity.getMultiplied(physicsObject.getDeltaT()));
             attributeModifier.run(physicsObject,futurePos,futureVelocity,simulatedForce,i);
-            vectors.add(futurePos);
+            positions.add(futurePos);
         }
-        return vectors.toArray(new Vector[0]);
+        return positions.toArray(new Vector[0]);
     }
 
     public Vector[] getFuturePositions(SimulatedForceCalculation forceCalculation) {
@@ -38,11 +40,13 @@ public class SimulatedParticle {
     }
 
     public Double[] getFutureRotations(SimulatedTorqueCalculation torqueCalculation, ManualRotationalAttributeModifier attributeModifier) {
-        ArrayList<Double> vectors = new ArrayList<>();
+        ArrayList<Double> rotations = new ArrayList<>();
 
         double simulatedTorque;
         double futureOmega = physicsObject.getOmega();
         double futureTheta = physicsObject.getTheta();
+
+        rotations.add(futureTheta); //Add original rotation to the list.. potentially remove
 
         for (int i = 0; i < steps; i++) {
             simulatedTorque = torqueCalculation.run(physicsObject,futureTheta,i);
@@ -50,9 +54,9 @@ public class SimulatedParticle {
             futureOmega += fakeAlpha * physicsObject.getDeltaT();
             futureTheta += futureOmega * physicsObject.getDeltaT();
             attributeModifier.run(physicsObject,futureTheta,futureOmega,simulatedTorque,i);
-            vectors.add(futureTheta);
+            rotations.add(futureTheta);
         }
-        return vectors.toArray(new Double[0]);
+        return rotations.toArray(new Double[0]);
     }
 
     public Double[] getFutureRotations(SimulatedTorqueCalculation torqueCalculation) {

@@ -10,10 +10,7 @@ import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
 import ejo.gravityshapes.App;
 import ejo.gravityshapes.TitleScene;
-import ejo.gravityshapes.manager.ParticleTrailManager;
-import ejo.gravityshapes.manager.ShootManager;
-import ejo.gravityshapes.manager.SimulatedPathManager;
-import ejo.gravityshapes.manager.StarManager;
+import ejo.gravityshapes.manager.*;
 import ejo.gravityshapes.util.CollisionUtil;
 import ejo.gravityshapes.util.PhysicsUtil;
 import org.lwjgl.glfw.GLFW;
@@ -25,29 +22,27 @@ public abstract class GravityScene extends Scene {
 
     protected final StarManager starManager;
     protected final boolean applyGravity;
-    protected final boolean wallBounce;
+    public final boolean wallBounce;
 
-    public GravityScene(String title, boolean applyGravity, boolean wallBounce, int objectCount, String spawnMode, int minM, int maxM) {
+    public GravityScene(String title, boolean applyGravity, boolean wallBounce, boolean paths, boolean fieldLines, int objectCount, String spawnMode, int minM, int maxM) {
         super(title);
         this.applyGravity = applyGravity;
         this.wallBounce = wallBounce;
 
-        this.starManager = new StarManager(this, 1, 250);
+        this.starManager = new StarManager(this, 1, fieldLines ? 0 : 250);
         setDebugManager(new GravityDebugManager(this));
+        addSceneManagers(new ShootManager(this,256,minM,maxM));
+
+        if (fieldLines) addSceneManagers(new FieldLineManager(this,30));
+        if (paths) addSceneManagers(new ParticleTrailManager(this,50));
+        //addSceneManagers(new SimulatedPathManager(this,50));
 
         switch (spawnMode) {
             case "Random" ->
                     generateObjectsRandomly(objectCount, minM, maxM, 1, .4f, .1f, .05f);
             case "Radial" ->
                     generateObjectsRadially(objectCount, 10, App.WINDOW.getSize().getYi() / 2, minM, maxM, 1, .04f, .1f, .05f);
-
         }
-
-        addSceneManagers(new ShootManager(this,256,minM,maxM));
-
-        //These are experimental and just for fun. Remove later
-        addSceneManagers(new SimulatedPathManager(this,50));
-        addSceneManagers(new ParticleTrailManager(this,50));
     }
 
     @Override
@@ -72,7 +67,7 @@ public abstract class GravityScene extends Scene {
                 for (Tickable e2 : tickables) {
                     if (e1.equals(e2) || !(e2 instanceof PhysicsObject obj2)) continue;
                     if (tickables.isRemovalQueued(obj2)) continue;
-                    obj1.addForce(PhysicsUtil.getGravityForce(obj1, obj2));
+                    obj1.addForce(PhysicsUtil.getGravityForce(1,obj1, obj2));
                 }
             }
         }

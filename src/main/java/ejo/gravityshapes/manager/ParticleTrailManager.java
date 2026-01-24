@@ -14,7 +14,7 @@ import java.util.LinkedList;
 
 public class ParticleTrailManager extends SceneManager {
 
-    private int steps;
+    private final int steps;
     private final HashMap<PhysicsObject, LinkedList<Vector>> previousPositions;
 
     public ParticleTrailManager(Scene scene, int steps) {
@@ -28,14 +28,6 @@ public class ParticleTrailManager extends SceneManager {
         drawAndUpdatePreviousPositions(steps);
     }
 
-    @Override
-    public void onKeyPress(int key, int scancode, int action, int mods) {
-        if (action != GLFW.GLFW_RELEASE) {
-            if (key == GLFW.GLFW_KEY_UP) steps ++;
-            if (key == GLFW.GLFW_KEY_DOWN) steps --;
-            if (steps < 0) steps = 0;
-        }
-    }
 
     //Ya know... This kinda works pretty well... I'm happy with it
     private void drawAndUpdatePreviousPositions(int steps) {

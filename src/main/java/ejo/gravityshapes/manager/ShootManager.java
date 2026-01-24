@@ -10,6 +10,7 @@ import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.action.DoOnce;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
+import ejo.gravityshapes.gravityscene.GravityScene;
 import ejo.gravityshapes.util.CollisionUtil;
 import ejo.gravityshapes.util.PhysicsUtil;
 import ejo.gravityshapes.element.SimulatedParticle;
@@ -136,16 +137,16 @@ public class ShootManager extends SceneManager {
                     particle.setSteps(i); //Only call this if on combined mode
                     return force;
                 }
-                force.add(PhysicsUtil.getGravityField(p, pos).getMultiplied(obj.getMass()));
+                force.add(PhysicsUtil.getGravityField(1,p, pos).getMultiplied(obj.getMass()));
             }
             return force;
         }, (obj, pos, vel, force, i) -> {
-                CollisionUtil.doWallBounce(scene, pos, vel, .9);
+                if (((GravityScene)scene).wallBounce) CollisionUtil.doWallBounce(scene, pos, vel, .9);
                 //Place Momentum collision code here
             });
 
         //Draw Shooter Line
-        Line line = new Line(scene, 2, Line.Type.DOTTED, Color.WHITE, vectors);
+        Line line = new Line(scene, 2, Line.Type.DASHED, Color.WHITE, vectors);
         line.setFaded(true);
         line.draw();
     }

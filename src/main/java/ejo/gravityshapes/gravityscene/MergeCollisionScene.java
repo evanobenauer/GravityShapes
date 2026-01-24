@@ -11,8 +11,8 @@ import java.awt.*;
 
 public class MergeCollisionScene extends GravityScene {
 
-    public MergeCollisionScene(boolean applyGravity, boolean wallBounce, int objectCount, String spawnMode, int minM, int maxM) {
-        super("Merge Collisions",applyGravity, wallBounce, objectCount, spawnMode, minM, maxM);
+    public MergeCollisionScene(boolean applyGravity, boolean wallBounce, boolean paths, boolean fieldLines, int objectCount, String spawnMode, int minM, int maxM) {
+        super("Merge Collisions",applyGravity, wallBounce, paths, fieldLines, objectCount, spawnMode, minM, maxM);
     }
 
     @Override

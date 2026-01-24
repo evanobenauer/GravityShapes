@@ -13,8 +13,10 @@ repositories {
 project.ext.lwjglVersion = "3.3.1"
 project.ext.lwjglNatives = "natives-windows"
 
+project.ext.appnexusVersion = "45df1363d2"
+
 dependencies {
-    implementation 'com.github.evanobenauer:AppNexus:8f01a648c0'
+    implementation "com.github.evanobenauer:AppNexus:$appnexusVersion"
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 

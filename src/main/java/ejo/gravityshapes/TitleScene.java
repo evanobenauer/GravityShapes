@@ -28,6 +28,8 @@ public class TitleScene extends Scene {
     public Slider<Integer> sliderObjectCount;
     public Toggle toggleWallBounce;
     public Toggle toggleApplyGravity;
+    public Toggle togglePaths;
+    public Toggle toggleFieldLines;
     public Cycle<String> cycleSpawnPattern;
 
     public Button startCollision;
@@ -41,28 +43,30 @@ public class TitleScene extends Scene {
         this.titleText = new Text(this, Vector.NULL(),"Gravity Shapes",new Font("Arial Black",Font.PLAIN,80),Color.WHITE, Text.Type.STATIC);
 
         this.sliderObjectCount = new Slider<>(this, new Vector(2,5),new Vector(250,40),widgetColor,new Setting<>("objectCount",1000),0,2500,1,"Object Count","The amount of particles on screen");
-        this.toggleApplyGravity = new Toggle(this,sliderObjectCount.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("applyGravity",true),"Apply Gravity","Turns gravity between particles on and off");
+        this.cycleSpawnPattern = new Cycle<>(this,sliderObjectCount.getPos().getAdded(0,45),new Vector(250,40),widgetColor,"Spawn","Pattern for spawning the default shapes",new Setting<>("spawnPattern","Random"),"Random","Radial");
+        this.toggleApplyGravity = new Toggle(this,cycleSpawnPattern.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("applyGravity",true),"Apply Gravity","Turns gravity between particles on and off");
         this.toggleWallBounce = new Toggle(this,toggleApplyGravity.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("wallBounce",true),"Wall Bounce","Bounces objects off of the walls");
-        this.cycleSpawnPattern = new Cycle<>(this,toggleWallBounce.getPos().getAdded(0,45),new Vector(250,40),widgetColor,"Spawn","Pattern for spawning the default shapes",new Setting<>("spawnPattern","Random"),"Random","Radial");
+        this.togglePaths = new Toggle(this,toggleWallBounce.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("paths",true),"Paths","Shows a path of a particle's recent positions");
+        this.toggleFieldLines = new Toggle(this,togglePaths.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("fieldLines",true),"Field Lines","Shows all gravitational field lines. Very laggy");
 
         SettingManager.DEFAULT_MANAGER.loadAll();
 
         this.startCollision = new TitleButton(this, Vector.NULL(),new Vector(200,200), widgetColor,"","Particles collide and bounce off of one another using momentum",getClass().getResource("/collision.png"),() -> {
             int size = 99;
-            getWindow().setScene(new BounceCollisionScene(toggleApplyGravity.getContainer().get(),toggleWallBounce.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),size,size));
+            getWindow().setScene(new BounceCollisionScene(toggleApplyGravity.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),size,size));
             SettingManager.DEFAULT_MANAGER.saveAll();
         });
         this.startMerge = new TitleButton(this, Vector.NULL(),new Vector(200,200), widgetColor,"","Particles collide and combine into larger particles",getClass().getResource("/merge.png"),() -> {
             int min = 99;
             int max = 100;
-            getWindow().setScene(new MergeCollisionScene(toggleApplyGravity.getContainer().get(),toggleWallBounce.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),min,max));
+            getWindow().setScene(new MergeCollisionScene(toggleApplyGravity.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),min,max));
             SettingManager.DEFAULT_MANAGER.saveAll();
         });
         this.startThird = new TitleButton(this, Vector.NULL(),new Vector(200,200), widgetColor,"","Electrons and Positrons flow across the screen. Combining into neutrons",getClass().getResource("/charge.png"),() -> {
             SettingManager.DEFAULT_MANAGER.saveAll();
         });
 
-        addElements(sliderObjectCount,toggleApplyGravity,toggleWallBounce,cycleSpawnPattern);
+        addElements(sliderObjectCount,toggleApplyGravity,toggleWallBounce,cycleSpawnPattern,togglePaths,toggleFieldLines);
         addElements(startCollision,startMerge,startThird);
         addElements(titleText);
 

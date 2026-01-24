@@ -8,8 +8,8 @@ import com.ejo.util.math.Vector;
 //TODO: This is unimplemented. Implement this
 public class BounceCollisionScene extends GravityScene {
 
-    public BounceCollisionScene(boolean applyGravity, boolean wallBounce, int objectCount, String spawnMode, int minM, int maxM) {
-        super("Collisions",applyGravity,wallBounce,objectCount,spawnMode, minM,maxM);
+    public BounceCollisionScene(boolean applyGravity, boolean wallBounce, boolean paths, boolean fieldLines, int objectCount, String spawnMode, int minM, int maxM) {
+        super("Collisions",applyGravity,wallBounce,paths,fieldLines,objectCount,spawnMode, minM,maxM);
     }
 
     @Override
@@ -28,13 +28,12 @@ public class BounceCollisionScene extends GravityScene {
         super.tick();
     }
 
-    @Deprecated
+    @Deprecated //Old but still cool
     private void doCollisionWeird(PhysicsObject obj1, PhysicsObject obj2) {
         Vector r = obj2.getPos().getSubtracted(obj1.getPos());
         double objectDistance = r.getMagnitude();
         boolean colliding =  objectDistance <= ((RegularPolygon)obj1.getElement()).getRadius() + ((RegularPolygon)obj2.getElement()).getRadius();
         if (colliding) {
-            //Old but still cool
             Vector avgV = obj1.getVelocity().getAdded(obj2.getVelocity()).getMultiplied(.5);
             obj2.setVelocity(avgV);
             obj1.setVelocity(avgV);

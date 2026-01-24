@@ -16,9 +16,10 @@ import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 
+@Deprecated //This was made as an experiment. Don't implement
 public class SimulatedPathManager extends SceneManager {
 
-    private int steps;
+    private final int steps;
     public SimulatedPathManager(Scene scene, int steps) {
         super(scene);
         this.steps = steps;
@@ -27,14 +28,6 @@ public class SimulatedPathManager extends SceneManager {
     @Override
     public void draw(Vector mousePos) {
         drawPredictedPathForAllParticles(steps);
-    }
-
-    @Override
-    public void onKeyPress(int key, int scancode, int action, int mods) {
-        if (action != GLFW.GLFW_RELEASE) {
-            if (key == GLFW.GLFW_KEY_UP) steps ++;
-            if (key == GLFW.GLFW_KEY_DOWN) steps --;
-        }
     }
 
     private void drawPredictedPathForAllParticles(int steps) {
@@ -50,14 +43,14 @@ public class SimulatedPathManager extends SceneManager {
                         particle.setSteps(i); //Only call this if on combined mode
                         return force;
                     }
-                    force.add(PhysicsUtil.getGravityField(p,pos).getMultiplied(obj1.getMass()));
+                    force.add(PhysicsUtil.getGravityField(1,p,pos).getMultiplied(obj1.getMass()));
                 }
                 return force;
             },(objy, pos, vel, force, i) ->
                     CollisionUtil.doWallBounce(scene, pos, vel, .9));
 
             //Draw Shooter Line
-            Line line = new Line(scene, 2, Line.Type.DOTTED, Color.WHITE, vectors);
+            Line line = new Line(scene, 2, Line.Type.DASHED, Color.WHITE, vectors);
             line.setFaded(true);
             line.draw();
         }

@@ -5,12 +5,11 @@ import com.ejo.util.math.Vector;
 
 public class PhysicsUtil {
 
-    public static Vector getGravityForce(PhysicsObject obj1, PhysicsObject obj2) {
-        return getGravityField(obj2,obj1.getPos()).getMultiplied(obj1.getMass());
+    public static Vector getGravityForce(float G, PhysicsObject obj1, PhysicsObject obj2) {
+        return getGravityField(G, obj2,obj1.getPos()).getMultiplied(obj1.getMass());
     }
 
-    public static Vector getGravityField(PhysicsObject obj, Vector pos) {
-        double G = 1;
+    public static Vector getGravityField(float G, PhysicsObject obj, Vector pos) {
         Vector r = obj.getPos().getSubtracted(pos);
         if (r.getMagnitude() == 0) return new Vector(0,0);
         Vector rHat = r.getUnitVector();
