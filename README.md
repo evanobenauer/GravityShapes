@@ -53,11 +53,6 @@ The object shooter will draw a blue outline of the object that is about to be sh
 - By default, the shooter size will equal the minimum spawn size for the scene
 - The shooter size can be changed by clicking UP or DOWN on the keyboard while pulling back
 
-# Bounce Mode (Left Button)
-Objects bounce off of one another using Conservaton of Momentum
-  
-![gif](img/bounceCollision.gif.gif)
-      
 # Merge Mode (Middle Button)
 Merge Mode offers a template where objects combine when collided.
 During the collision, particles become one where their polygons add their mass, average their vertices, and average their colors
@@ -70,6 +65,14 @@ Velocity after the collision is determined using perfectly inelastic conservatio
 - All objects have an accurate Rotational Inertia function set by the shape
 - When objects collide, depending on their angle, they will apply a torque and spin the object
 - The "Collision Time" for the torque is dependent on the step time of the particle
+  
+# Bounce Mode (Left Button)
+THIS MODE IS NOT FINISHED
+Objects bounce off of one another using Conservaton of Momentum
+  
+![gif](img/bounceCollision.gif.gif)
+      
+
     
 ![gif](img/rotations.gif.gif)
     
