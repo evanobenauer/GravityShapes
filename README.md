@@ -34,10 +34,12 @@ Clicking on the screen and pulling back will activate the object shooter
 The object shooter will draw a blue outline of the object that is about to be shot
 *Simulated Particle Line*
 - The shooter uses my SimulatedParticle object to calculate the kinematics equations for 50 steps forward. This will cause curves in the shoot line
+  
   ![gif](img/Shooting.gif.gif)
 
 *Rapid Shooting*
 - Holding LShift while holding back the shooter will enable rapid fire mode. This will shoot a new object every tick
+  
   ![gif](img/RapidShooting.gif.gif)
 
 *Size Changing*
@@ -50,15 +52,18 @@ Gravity Shapes currently offers 3 modes
 
   # Bounce Mode (Left Button)
   Objects bounce off of one another using Conservaton of Momentum
-      ![gif](img/bounceCollision.gif.gif)
+  
+  ![gif](img/bounceCollision.gif.gif)
       
   # Merge Mode (Middle Button)
   Objects combine when collided using Conservation of Momentum and Rotational Motion
-    ![gif](img/mergeRadial.gif.gif)
+  
+  ![gif](img/mergeRadial.gif.gif)
   *Rotational Motion*
     - Objects in Merge Mode sping their polygons according to Rotational Motion. 
     - When objects collide, depending on their angle, they will apply a torque and spin the object
-    ![gif](img/rotations.gif.gif)
+    
+  ![gif](img/rotations.gif.gif)
     
   # Electronics Mode (Right Button)
     Unimplemented
