@@ -12,7 +12,7 @@ public class App {
 
 
     public static void main(String[] args) {
-        WINDOW.setDebugMode(Window.DebugMode.DEBUG_SIMPLE);
+        //WINDOW.setDebugMode(Window.DebugMode.DEBUG_SIMPLE);
         WINDOW.init();
         WINDOW.startThreadTickLoop();
         WINDOW.runMainRenderLoop();

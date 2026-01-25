@@ -128,7 +128,7 @@ public class ShootManager extends SceneManager {
     private void updateDrawnFeatures(Vector mousePos) {
         //Update Shoot Velocity & Spin
         this.shootSpin = shootSpin.getAdded(1, true);
-        this.shootVelocity = shootPos.getAdded(mousePos.getMultiplied(-1)).getMultiplied(.75);
+        this.shootVelocity = shootPos.getAdded(mousePos.getMultiplied(-1));
     }
 
     private void drawShootingObject(Vector mousePos) {

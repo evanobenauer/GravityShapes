@@ -40,10 +40,20 @@ public class FieldLineManager extends SceneManager {
                     if (!(String.valueOf(gravityFromOtherObject.getMagnitude())).equals("NaN"))
                         gravityForce.add(gravityFromOtherObject);
                 }
-                Line lineUI = new Line(scene, new Vector(x, y).getMultiplied(inverseDensity), gravityForce.getTheta(), Math.min(Math.max(gravityForce.getMagnitude(), .2), 1) * 10, .5, Line.Type.PLAIN,ColorUtil.getWithAlpha(Color.WHITE,100));
+                double size = Math.min(Math.max(gravityForce.getMagnitude(), .2), 1) * 10;
+                Color c = Color.WHITE;//getRedBlueScaledColor(1 - Math.min(255,gravityForce.getMagnitude() * 50) / 255);
+                Line lineUI = new Line(scene, new Vector(x, y).getMultiplied(inverseDensity), gravityForce.getTheta(), size, .5, Line.Type.PLAIN,ColorUtil.getWithAlpha(c,100));
                 lineUI.draw();
             }
         }
+    }
+
+    public static Color getRedBlueScaledColor(double scale) {
+        int r = (int) Math.clamp((1 - scale) * 255,0,255);
+        int g = 0;
+        int b = (int) Math.clamp(scale * 255,0,255);
+
+        return new Color(r, g, b);
     }
 
 }

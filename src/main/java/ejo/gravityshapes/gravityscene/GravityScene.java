@@ -1,6 +1,7 @@
 package ejo.gravityshapes.gravityscene;
 
 import com.ejo.ui.Scene;
+import com.ejo.ui.Window;
 import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.base.Tickable;
 import com.ejo.ui.manager.DebugManager;
@@ -29,15 +30,14 @@ public abstract class GravityScene extends Scene {
         this.G = G;
         this.wallBounce = wallBounce;
 
-        //float deltaT = .05f;
-        float deltaT = .005f;
+        float deltaT = .05f;
 
         this.starManager = new StarManager(this, 1, fieldLines ? 0 : 250);
         setDebugManager(new GravityDebugManager(this));
         addSceneManagers(new ShootManager(this,256,minM,maxM,G,deltaT));
 
-        if (fieldLines) addSceneManagers(new FieldLineManager(this,G,30));
-        if (paths) addSceneManagers(new ParticleTrailManager(this,50));
+        if (fieldLines) addSceneManagers(new FieldLineManager(this,G,40));
+        if (paths) addSceneManagers(new ParticleTrailManager(this,(int)(1/deltaT * 2.5)));
         //addSceneManagers(new SimulatedPathManager(this,50,G));
 
         switch (spawnMode) {
@@ -150,6 +150,8 @@ public abstract class GravityScene extends Scene {
         @Override
         public void draw(Vector mousePos) {
             super.draw(mousePos);
+            com.ejo.ui.Window.DebugMode mode = scene.getWindow().getDebugMode();
+            if (mode.equals(Window.DebugMode.OFF)) return;
             Vector pos = new Vector(2, 72);
             pos.add(new Vector(0, 10));
 
