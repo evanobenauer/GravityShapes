@@ -59,12 +59,17 @@ Objects bounce off of one another using Conservaton of Momentum
 ![gif](img/bounceCollision.gif.gif)
       
 # Merge Mode (Middle Button)
-Objects combine when collided using Conservation of Momentum and Rotational Motion
+Merge Mode offers a template where objects combine when collided.
+During the collision, particles become one where their polygons add their mass, average their vertices, and average their colors
+Velocity after the collision is determined using perfectly inelastic conservation of momentum
   
 ![gif](img/mergeRadial.gif.gif)
+
 *Rotational Motion*
-- Objects in Merge Mode sping their polygons according to Rotational Motion. 
+- Objects in Merge Mode sping their polygons according to Rotational Motion.
+- All objects have an accurate Rotational Inertia function set by the shape
 - When objects collide, depending on their angle, they will apply a torque and spin the object
+- The "Collision Time" for the torque is dependent on the step time of the particle
     
 ![gif](img/rotations.gif.gif)
     
