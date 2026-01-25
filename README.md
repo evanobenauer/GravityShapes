@@ -38,6 +38,7 @@ Gravity Shapes has 6 main universal options users can toggle on and off
 # Object Shooter
 Clicking on the screen and pulling back will activate the object shooter
 The object shooter will draw a blue outline of the object that is about to be shot
+
 *Simulated Particle Line*
 - The shooter uses my SimulatedParticle object to calculate the kinematics equations for 50 steps forward. This will cause curves in the shoot line
   
