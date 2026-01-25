@@ -14,12 +14,16 @@ This application created PhysicsObjects that orbit together with respect to Newt
 Gravity Shapes has 6 main universal options users can toggle on and off
 *Object Count*
 - Determines the amount of naturally spawning objects on screen
+  
 *Gravity Strength*
 - Determines the strength multiplier of the gravity equation. (The G constant)
+  
 *Spawn Patterns*
 - Spawns objects randomly or radially (circular)
+  
 *Wall Bounce*
 - Objects will bounce off of the walls with 90% restitution to keep all particles on screen
+  
 *Object Paths*
 - Objects draw a path that fades to dark behind them
     
