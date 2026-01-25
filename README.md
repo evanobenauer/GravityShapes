@@ -12,22 +12,22 @@ This application created PhysicsObjects that orbit together with respect to Newt
   
 # Universal Options
 Gravity Shapes has 6 main universal options users can toggle on and off
-- *Object Count*
-  - Determines the amount of naturally spawning objects on screen
-- *Gravity Strength*
-  - Determines the strength multiplier of the gravity equation. (The G constant)
-- *Spawn Patterns*
-  - Spawns objects randomly or radially (circular)
-- *Wall Bounce*
-  - Objects will bounce off of the walls with 90% restitution to keep all particles on screen
-- *Object Paths*
-  - Objects draw a path that fades to dark behind them
+*Object Count*
+- Determines the amount of naturally spawning objects on screen
+*Gravity Strength*
+- Determines the strength multiplier of the gravity equation. (The G constant)
+*Spawn Patterns*
+- Spawns objects randomly or radially (circular)
+*Wall Bounce*
+- Objects will bounce off of the walls with 90% restitution to keep all particles on screen
+*Object Paths*
+- Objects draw a path that fades to dark behind them
     
-    ![gif](img/trails.gif.gif)
-- *Field Lines*
-  - Draws all gravitational field lines
+  ![gif](img/trails.gif.gif)
+*Field Lines*
+- Draws all gravitational field lines
     
-    ![gif](img/fieldlines.gif.gif)
+  ![gif](img/fieldlines.gif.gif)
   
 # Object Shooter
 Clicking on the screen and pulling back will activate the object shooter
@@ -46,25 +46,21 @@ The object shooter will draw a blue outline of the object that is about to be sh
 - By default, the shooter size will equal the minimum spawn size for the scene
 - The shooter size can be changed by clicking UP or DOWN on the keyboard while pulling back
 
-
-# Modes
-Gravity Shapes currently offers 3 modes
-
-  # Bounce Mode (Left Button)
-  Objects bounce off of one another using Conservaton of Momentum
+# Bounce Mode (Left Button)
+Objects bounce off of one another using Conservaton of Momentum
   
-  ![gif](img/bounceCollision.gif.gif)
+![gif](img/bounceCollision.gif.gif)
       
-  # Merge Mode (Middle Button)
-  Objects combine when collided using Conservation of Momentum and Rotational Motion
+# Merge Mode (Middle Button)
+Objects combine when collided using Conservation of Momentum and Rotational Motion
   
-  ![gif](img/mergeRadial.gif.gif)
-  *Rotational Motion*
-    - Objects in Merge Mode sping their polygons according to Rotational Motion. 
-    - When objects collide, depending on their angle, they will apply a torque and spin the object
+![gif](img/mergeRadial.gif.gif)
+*Rotational Motion*
+- Objects in Merge Mode sping their polygons according to Rotational Motion. 
+- When objects collide, depending on their angle, they will apply a torque and spin the object
     
-  ![gif](img/rotations.gif.gif)
+![gif](img/rotations.gif.gif)
     
-  # Electronics Mode (Right Button)
-    Unimplemented
+# Electronics Mode (Right Button)
+  Unimplemented
 
