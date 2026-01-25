@@ -12,6 +12,7 @@ This application created PhysicsObjects that orbit together with respect to Newt
   
 # Universal Options
 Gravity Shapes has 6 main universal options users can toggle on and off
+
 *Object Count*
 - Determines the amount of naturally spawning objects on screen
   
@@ -28,6 +29,7 @@ Gravity Shapes has 6 main universal options users can toggle on and off
 - Objects draw a path that fades to dark behind them
     
   ![gif](img/trails.gif.gif)
+  
 *Field Lines*
 - Draws all gravitational field lines
     
