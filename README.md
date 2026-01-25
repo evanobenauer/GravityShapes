@@ -55,8 +55,10 @@ The object shooter will draw a blue outline of the object that is about to be sh
 
 # Merge Mode (Middle Button)
 Merge Mode offers a template where objects combine when collided.
+
 During the collision, particles become one where their polygons add their mass, average their vertices, and average their colors
 Velocity after the collision is determined using perfectly inelastic conservation of momentum
+
   
 ![gif](img/mergeRadial.gif.gif)
 
