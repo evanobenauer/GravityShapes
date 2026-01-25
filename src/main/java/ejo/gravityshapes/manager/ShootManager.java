@@ -3,13 +3,14 @@ package ejo.gravityshapes.manager;
 import com.ejo.ui.Scene;
 import com.ejo.ui.element.DrawableElement;
 import com.ejo.ui.element.Line;
+import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.shape.RegularPolygon;
-import com.ejo.ui.element.simulation.PhysicsObject;
-import com.ejo.ui.element.simulation.PhysicsObjectDraggable;
 import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.action.DoOnce;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
+import ejo.gravityshapes.element.PhysicsObjectDraggable;
+import ejo.gravityshapes.gravityscene.BounceCollisionScene;
 import ejo.gravityshapes.gravityscene.GravityScene;
 import ejo.gravityshapes.util.CollisionUtil;
 import ejo.gravityshapes.util.PhysicsUtil;
@@ -88,11 +89,13 @@ public class ShootManager extends SceneManager {
             if (key == GLFW.GLFW_KEY_LEFT_CONTROL) tripleRapid = false;
         } else {
             if (shooting) {
+                if (key == GLFW.GLFW_KEY_LEFT_SHIFT) rapid = true;
+                if (key == GLFW.GLFW_KEY_LEFT_CONTROL) tripleRapid = true;
+
+                if (scene instanceof BounceCollisionScene) return;
                 if (key == GLFW.GLFW_KEY_UP) shootSize += 1;
                 if (key == GLFW.GLFW_KEY_DOWN) shootSize -= 1;
                 if (shootSize < .5) shootSize = .5;
-                if (key == GLFW.GLFW_KEY_LEFT_SHIFT) rapid = true;
-                if (key == GLFW.GLFW_KEY_LEFT_CONTROL) tripleRapid = true;
             }
         }
     }
@@ -134,16 +137,22 @@ public class ShootManager extends SceneManager {
             for (DrawableElement element : scene.getDrawableElements()) {
                 if (!(element instanceof PhysicsObject p)) continue;
                 if (CollisionUtil.isColliding((RegularPolygon) particle.getAtPos(pos).getElement(), (RegularPolygon) p.getElement())) {
-                    particle.setSteps(i); //Only call this if on combined mode
+                    if (!(scene instanceof BounceCollisionScene))particle.setSteps(i); //Only call this if on combined mode
                     return force;
                 }
-                force.add(PhysicsUtil.getGravityField(1,p, pos).getMultiplied(obj.getMass()));
+                force.add(PhysicsUtil.getGravityField(1, p, pos).getMultiplied(obj.getMass()));
             }
             return force;
-        }, (obj, pos, vel, force, i) -> {
-                if (((GravityScene)scene).wallBounce) CollisionUtil.doWallBounce(scene, pos, vel, .9);
-                //Place Momentum collision code here
-            });
+        }, (obj1, pos, vel, force, i) -> {
+            if (((GravityScene) scene).wallBounce) CollisionUtil.doWallBounce(scene, pos, vel, .9);
+            /*if (scene instanceof BounceCollisionScene s) {
+                for (DrawableElement element : scene.getDrawableElements()) {
+                    if (!(element instanceof PhysicsObject obj2)) continue;
+                    s.doPushCollision(obj1,obj2,obj1.getPos(),obj1.getVelocity(),obj1.getNetForce(),obj2.getPos(),obj2.getVelocity(),obj2.getNetForce(),.6,false,0); //This needs to be modified to accept the futurePos and futureVel
+                }
+            }*/
+
+        });
 
         //Draw Shooter Line
         Line line = new Line(scene, 2, Line.Type.DASHED, Color.WHITE, vectors);
@@ -162,6 +171,8 @@ public class ShootManager extends SceneManager {
         } else {
             shooterInitializer.reset();
             shooter.run(this::addShotObject);
+            shootPos = Vector.NULL();
+            shootVelocity = Vector.NULL();
         }
     }
 
@@ -177,13 +188,15 @@ public class ShootManager extends SceneManager {
             }
         } else {
             shooterInitializer.reset();
+            shootPos = Vector.NULL();
+            shootVelocity = Vector.NULL();
         }
     }
 
     private void addShotObject() {
         //Shoot the object
         Random random = new Random();
-        Color randomColor = new Color(random.nextInt(25, 255), random.nextInt(25, 255), random.nextInt(25, 255), 255);
+        Color randomColor = new Color(random.nextInt(25, 255), random.nextInt(25, 255), random.nextInt(25, 255), 100);
 
         RegularPolygon poly = new RegularPolygon(scene, Vector.NULL(), randomColor, shootSize, shootVertices, shootSpin);
         PhysicsObjectDraggable obj = new PhysicsObjectDraggable(scene, shootPos, poly);
@@ -198,7 +211,7 @@ public class ShootManager extends SceneManager {
     private void addTripleShotObject() {
         //Shoot the object
         Random random = new Random();
-        Color randomColor = new Color(random.nextInt(25, 255), random.nextInt(25, 255), random.nextInt(25, 255), 255);
+        Color randomColor = new Color(random.nextInt(25, 255), random.nextInt(25, 255), random.nextInt(25, 255), 100);
 
         boolean neg = false;
         for (int i = 0; i < 3; i++) {

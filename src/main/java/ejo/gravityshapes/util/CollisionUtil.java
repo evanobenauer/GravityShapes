@@ -1,14 +1,13 @@
 package ejo.gravityshapes.util;
 
 import com.ejo.ui.Scene;
+import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.shape.Circle;
 import com.ejo.ui.element.shape.ConvexPolygon;
 import com.ejo.ui.element.shape.RegularPolygon;
-import com.ejo.ui.element.simulation.PhysicsObject;
 import com.ejo.util.math.Vector;
 
 public class CollisionUtil {
-
 
     public static boolean isColliding(ConvexPolygon poly1, ConvexPolygon poly2) {
         return false; //TODO: Do an SAT thing here

@@ -1,15 +1,15 @@
 package ejo.gravityshapes.gravityscene;
 
 import com.ejo.ui.Scene;
+import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.base.Tickable;
 import com.ejo.ui.element.shape.RegularPolygon;
-import com.ejo.ui.element.simulation.PhysicsObject;
-import com.ejo.ui.element.simulation.PhysicsObjectDraggable;
 import com.ejo.ui.manager.DebugManager;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
 import ejo.gravityshapes.App;
 import ejo.gravityshapes.TitleScene;
+import ejo.gravityshapes.element.PhysicsObjectDraggable;
 import ejo.gravityshapes.manager.*;
 import ejo.gravityshapes.util.CollisionUtil;
 import ejo.gravityshapes.util.PhysicsUtil;
@@ -99,6 +99,7 @@ public abstract class GravityScene extends Scene {
             PhysicsObjectDraggable obj = new PhysicsObjectDraggable(this, pos, polygon);
             obj.setVelocity(v);
             obj.setMass(m);
+            obj.setRotationalInertia(2f / 5 * m * r * r);
             obj.setDeltaT(deltaT);
             addElement(obj, false);
         }
@@ -127,6 +128,7 @@ public abstract class GravityScene extends Scene {
             PhysicsObjectDraggable obj = new PhysicsObjectDraggable(this, pos, polygon);
             obj.setVelocity(v);
             obj.setMass(m);
+            obj.setRotationalInertia(2f / 5 * m * r * r);
             obj.setDeltaT(deltaT);
             addElement(obj, false);
         }

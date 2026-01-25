@@ -1,10 +1,11 @@
 package ejo.gravityshapes.gravityscene;
 
+import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.base.Tickable;
 import com.ejo.ui.element.shape.RegularPolygon;
-import com.ejo.ui.element.simulation.PhysicsObject;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
+import ejo.gravityshapes.element.PhysicsObjectDraggable;
 import ejo.gravityshapes.util.CollisionUtil;
 
 import java.awt.*;
@@ -12,15 +13,23 @@ import java.awt.*;
 public class MergeCollisionScene extends GravityScene {
 
     public MergeCollisionScene(boolean applyGravity, boolean wallBounce, boolean paths, boolean fieldLines, int objectCount, String spawnMode, int minM, int maxM) {
-        super("Merge Collisions",applyGravity, wallBounce, paths, fieldLines, objectCount, spawnMode, minM, maxM);
+        super("Merge Collisions", applyGravity, wallBounce, paths, fieldLines, objectCount, spawnMode, minM, maxM);
     }
 
     @Override
     public void draw() {
-        //Update visual rotation
         drawableElements.forIQueued((e) -> {
-            if (e instanceof PhysicsObject obj)
+            if (e instanceof PhysicsObject obj) {
+                //Update visual rotation
                 ((RegularPolygon) obj.getElement()).setRotation(new Angle(obj.getTheta()));
+
+                //Slow rotation back to stable over time? Like some kind of drag?
+                float slowSpeed = 0.1f;
+                if (Math.abs(obj.getOmega()) > 0) {
+                    if (obj.getOmega() > 0) obj.setOmega(obj.getOmega() - slowSpeed / 360);
+                    if (obj.getOmega() < 0) obj.setOmega(obj.getOmega() + slowSpeed / 360);
+                }
+            }
         });
         super.draw();
     }
@@ -35,48 +44,103 @@ public class MergeCollisionScene extends GravityScene {
             for (Tickable e2 : tickables) {
                 if (e1.equals(e2) || !(e2 instanceof PhysicsObject obj2)) continue;
                 if (tickables.isRemovalQueued(obj2)) continue;
-                doCollisionMerge(obj1,obj2);
+                doCollisionMerge(obj1, obj2);
             }
         }
         super.tick();
     }
 
-    private void doCollisionMerge(PhysicsObject obj1, PhysicsObject obj2) {
-        if (CollisionUtil.isColliding(((RegularPolygon)obj1.getElement()),((RegularPolygon)obj2.getElement()))) {
-            //Update Velocity
-            double addedMass = obj1.getMass() + obj2.getMass();
-            Vector newV = obj1.getVelocity().getMultiplied(obj1.getMass()).getAdded(obj2.getVelocity().getMultiplied(obj2.getMass())).getMultiplied(1/addedMass);
-            obj1.setVelocity(newV);
-            obj1.setMass(addedMass);
+    //TODO: Make a "Bop" sound effect from the collision
+    public void doCollisionMerge(PhysicsObject obj1, PhysicsObject obj2) {
+        RegularPolygon poly1 = ((RegularPolygon) obj1.getElement());
+        RegularPolygon poly2 = ((RegularPolygon) obj2.getElement());
+        if (!CollisionUtil.isColliding(poly1, poly2)) return;
 
-            //Set Pos
-            double weight = obj1.getMass() / (obj2.getMass() + obj1.getMass());
-            obj1.setPos(obj1.getPos().getMultiplied(weight).getAdded(obj2.getPos().getMultiplied(1 - weight)));
+        double massWeight = obj1.getMass() / (obj2.getMass() + obj1.getMass());
+        double angularWeight = obj1.getRotationalInertia() / (obj1.getRotationalInertia() + obj2.getRotationalInertia());
 
-            //Update Radius
-            double p = 1f;
-            double rn = Math.pow(3 * obj1.getMass() / (4 * Math.PI * p),1f/3); //3D
-            ((RegularPolygon) obj1.getElement()).setRadius(rn);
+        //============= Rotations ==============
 
-            //Update Vertex Count
-            int v1 = ((RegularPolygon) obj1.getElement()).getVertexCount();
-            int v2 = ((RegularPolygon) obj2.getElement()).getVertexCount();
-            ((RegularPolygon) obj1.getElement()).setVertexCount((int) Math.round(v1 * weight + v2 * (1-weight)));
+        //Set Average Polygon Spin
+        Angle t1 = new Angle(obj1.getTheta()).simplify();
+        Angle t2 = new Angle(obj2.getTheta()).simplify();
+        double spin1 = t1.getRadians();
+        double spin2 = t2.getRadians();
+        while (spin1 > Math.PI * 2 / poly1.getVertexCount()) spin1 -= Math.PI * 2 / poly1.getVertexCount();
+        while (spin2 > Math.PI * 2 / poly2.getVertexCount()) spin2 -= Math.PI * 2 / poly2.getVertexCount();
+        obj1.setTheta(spin1*massWeight + spin2*(1-massWeight));
 
-            //Update Color
-            Color c1 = ((RegularPolygon)obj1.getElement()).getColor();
-            Color c2 = ((RegularPolygon)obj2.getElement()).getColor();
-            double cWeight = Math.clamp(weight,0,1);
-            int red = (int)(c1.getRed() * cWeight + c2.getRed() * (1-cWeight));
-            int green = (int)(c1.getGreen() * cWeight + c2.getGreen() * (1-cWeight));
-            int blue = (int)(c1.getBlue() * cWeight + c2.getBlue() * (1-cWeight));
-            int alpha = (int)(c1.getAlpha() * cWeight + c2.getAlpha() * (1-cWeight));
-            ((RegularPolygon)obj1.getElement()).setColor(new Color(red,green,blue,alpha));
+        //Set Conservation of Angular Momentum
+        obj1.setOmega(obj1.getOmega() * angularWeight + obj2.getOmega() * (1 - angularWeight));
 
-            //TODO: Add Rotation Motion data here too.
+        //Set Torque
+        applyTorqueFromCollision(obj1, obj2, obj1.getDeltaT());
 
-            removeElement(obj2,true);
-            //drawableElements.remove(obj2);
+        //============= Linear ==============
+
+        //Set Conservation of Linear Momentum
+        obj1.setVelocity(obj1.getVelocity().getMultiplied(massWeight).getAdded(obj2.getVelocity().getMultiplied(1 - massWeight)));
+
+        //Set Mass and Radius
+        obj1.setMass(obj1.getMass() + obj2.getMass());
+        double p = 1;
+        double radius = Math.pow(3 * obj1.getMass() / (4 * Math.PI * p), 1f / 3); //3D
+        poly1.setRadius(radius);
+
+        //============= Visuals ==============
+
+        //Set Average Color
+        int red = (int) (poly1.getColor().getRed() * massWeight + poly2.getColor().getRed() * (1 - massWeight));
+        int green = (int) (poly1.getColor().getGreen() * massWeight + poly2.getColor().getGreen() * (1 - massWeight));
+        int blue = (int) (poly1.getColor().getBlue() * massWeight + poly2.getColor().getBlue() * (1 - massWeight));
+        int alpha = (int) (poly1.getColor().getAlpha() * massWeight + poly2.getColor().getAlpha() * (1 - massWeight));
+        poly1.setColor(new Color(red, green, blue, alpha));
+
+        //Set Average Polygon Type
+        poly1.setVertexCount((int) Math.round(poly1.getVertexCount() * massWeight + poly2.getVertexCount() * (1 - massWeight)));
+
+        //============= Finalize ==============
+
+        //Set Averaged Position
+        obj1.setPos(obj1.getPos().getMultiplied(massWeight).getAdded(obj2.getPos().getMultiplied(1 - massWeight)));
+
+        //Update Rotational Inertia
+        obj1.setRotationalInertia(2f / 5 * obj1.getMass() * Math.pow(poly1.getRadius(),2));
+
+        //Set Dragging
+        if (((PhysicsObjectDraggable) obj2).isDragging())
+            ((PhysicsObjectDraggable) obj1).setDragging(true);
+        ((PhysicsObjectDraggable) obj2).setDragging(false);
+
+        //Delete old object
+        removeElement(obj2, true);
+    }
+
+    public void applyTorqueFromCollision(PhysicsObject obj1, PhysicsObject obj2, double collisionTime) {
+        //Main object is reference frame. Other object is moving object
+
+        //Calculate perpendicularity of velocity compared to the position
+        Vector obj2RefPos = obj2.getPos().getSubtracted(obj1.getPos());//VectorUtil.calculateVectorBetweenObjects(object,this);
+        Vector obj2RefVelocity = obj2.getVelocity().getSubtracted(obj1.getVelocity());
+        double perpendicularity = obj2RefPos.getUnitVector().getCross(obj2RefVelocity.getUnitVector()).getMagnitude();
+
+        //Calculate the sign of the velocity compared to the position
+        //This is some weird wizardry
+        int sign;
+        Angle referencePosAngle = new Angle(-Math.atan2(obj2RefPos.getY(), obj2RefPos.getX())); //+180 to -180
+        Angle referenceVelocityAngle = new Angle(-Math.atan2(obj2RefVelocity.getY(), obj2RefVelocity.getX())); //+180 to -180
+        if (obj2RefPos.getY() < 0) { //Top Half
+            if (referenceVelocityAngle.getDegrees() + 180 > 240)
+                referenceVelocityAngle = new Angle(referenceVelocityAngle.getRadians() - 2 * Math.PI);
+            sign = (referenceVelocityAngle.getDegrees() + 180 < referencePosAngle.getDegrees()) ? -1 : 1;
+        } else { //Bottom Half
+            if (referenceVelocityAngle.getDegrees() - 180 < -240)
+                referenceVelocityAngle = new Angle(referenceVelocityAngle.getRadians() + 2 * Math.PI);
+            sign = (referenceVelocityAngle.getDegrees() - 180 < referencePosAngle.getDegrees()) ? -1 : 1;
         }
+
+        //Set the net torque using the force between the two, the radius of the NEW object, and perpendicularity
+        double rotForce = obj2.getMass() * Math.abs(0 - obj2RefVelocity.getMagnitude()) / collisionTime;
+        obj1.addTorque(rotForce * ((RegularPolygon) obj1.getElement()).getRadius() * sign * perpendicularity);
     }
 }

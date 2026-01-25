@@ -1,6 +1,6 @@
 package ejo.gravityshapes.util;
 
-import com.ejo.ui.element.simulation.PhysicsObject;
+import com.ejo.ui.element.PhysicsObject;
 import com.ejo.util.math.Vector;
 
 public class PhysicsUtil {

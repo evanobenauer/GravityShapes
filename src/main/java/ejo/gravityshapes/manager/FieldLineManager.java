@@ -3,7 +3,7 @@ package ejo.gravityshapes.manager;
 import com.ejo.ui.Scene;
 import com.ejo.ui.element.DrawableElement;
 import com.ejo.ui.element.Line;
-import com.ejo.ui.element.simulation.PhysicsObject;
+import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.math.Vector;
 import com.ejo.util.misc.ColorUtil;
