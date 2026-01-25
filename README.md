@@ -66,15 +66,13 @@ Velocity after the collision is determined using perfectly inelastic conservatio
 - When objects collide, depending on their angle, they will apply a torque and spin the object
 - The "Collision Time" for the torque is dependent on the step time of the particle
   
+![gif](img/rotations.gif.gif)
+
 # Bounce Mode (Left Button)
 THIS MODE IS NOT FINISHED
 Objects bounce off of one another using Conservaton of Momentum
   
 ![gif](img/bounceCollision.gif.gif)
-      
-
-    
-![gif](img/rotations.gif.gif)
     
 # Electronics Mode (Right Button)
   Unimplemented
