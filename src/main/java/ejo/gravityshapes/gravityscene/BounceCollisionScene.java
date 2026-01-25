@@ -21,8 +21,8 @@ public class BounceCollisionScene extends GravityScene {
     private boolean drawGrid;
     private ObjectGrid collisionGrid;
 
-    public BounceCollisionScene(boolean applyGravity, boolean wallBounce, boolean paths, boolean fieldLines, int objectCount, String spawnMode, int radius) {
-        super("Collisions", applyGravity, wallBounce, paths, fieldLines, objectCount, spawnMode, (int) (4d/3 * Math.PI * Math.pow(radius,3)), (int) (4d/3 * Math.PI * Math.pow(radius,3)));
+    public BounceCollisionScene(int G, boolean wallBounce, boolean paths, boolean fieldLines, int objectCount, String spawnMode, int radius) {
+        super("Collisions", G, wallBounce, paths, fieldLines, objectCount, spawnMode, (int) (4d/3 * Math.PI * Math.pow(radius,3)), (int) (4d/3 * Math.PI * Math.pow(radius,3)));
         this.baseSize = radius;
         this.drawGrid = false;
     }

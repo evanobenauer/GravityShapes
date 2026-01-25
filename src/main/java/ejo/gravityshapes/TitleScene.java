@@ -29,11 +29,11 @@ public class TitleScene extends Scene {
 
     //Setting Widgets
     public Slider<Integer> sliderObjectCount;
+    public Cycle<String> cycleSpawnPattern;
+    public Slider<Integer> sliderG;
     public Toggle toggleWallBounce;
-    public Toggle toggleApplyGravity;
     public Toggle togglePaths;
     public Toggle toggleFieldLines;
-    public Cycle<String> cycleSpawnPattern;
     public Slider<Integer> sliderBounceObjectSize;
     public Slider<Integer> sliderMergeObjectSizeMin;
     public Slider<Integer> sliderMergeObjectSizeMax;
@@ -58,7 +58,7 @@ public class TitleScene extends Scene {
         SettingManager.DEFAULT_MANAGER.loadAll();
 
         //Add all elements
-        addElements(sliderObjectCount,toggleApplyGravity,toggleWallBounce,cycleSpawnPattern,togglePaths,toggleFieldLines);
+        addElements(sliderObjectCount, sliderG,toggleWallBounce,cycleSpawnPattern,togglePaths,toggleFieldLines);
         addElements(startBounce,startMerge, startCharge);
         addElements(sliderBounceObjectSize,sliderMergeObjectSizeMax,sliderMergeObjectSizeMin);
         addElements(titleText);
@@ -90,9 +90,9 @@ public class TitleScene extends Scene {
 
     private void initSettingWidgets(Color widgetColor) {
         this.sliderObjectCount = new Slider<>(this, new Vector(2,5),new Vector(250,40),widgetColor,new Setting<>("objectCount",1000),0,2500,1,"Object Count","The amount of particles on screen");
-        this.cycleSpawnPattern = new Cycle<>(this,sliderObjectCount.getPos().getAdded(0,45),new Vector(250,40),widgetColor,"Spawn","Pattern for spawning the default shapes",new Setting<>("spawnPattern","Random"),"Random","Radial");
-        this.toggleApplyGravity = new Toggle(this,cycleSpawnPattern.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("applyGravity",true),"Apply Gravity","Turns gravity between particles on and off");
-        this.toggleWallBounce = new Toggle(this,toggleApplyGravity.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("wallBounce",false),"Wall Bounce","Bounces objects off of the walls");
+        this.sliderG = new Slider<>(this,sliderObjectCount.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("gValue",1),0,1000,1,"G Strength","Determines the strength of gravity between particles");
+        this.cycleSpawnPattern = new Cycle<>(this,sliderG.getPos().getAdded(0,45),new Vector(250,40),widgetColor,"Spawn","Pattern for spawning the default shapes",new Setting<>("spawnPattern","Random"),"Random","Radial");
+        this.toggleWallBounce = new Toggle(this, cycleSpawnPattern.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("wallBounce",false),"Wall Bounce","Bounces objects off of the walls");
         this.togglePaths = new Toggle(this,toggleWallBounce.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("paths",false),"Paths","Shows a path of a particle's recent positions");
         this.toggleFieldLines = new Toggle(this,togglePaths.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("fieldLines",false),"Field Lines","Shows all gravitational field lines. Very laggy");
 
@@ -104,14 +104,14 @@ public class TitleScene extends Scene {
 
     private void initStartButtons(Color widgetColor) {
         this.startBounce = new TitleButton(this, Vector.NULL(),new Vector(200,200), widgetColor,"","Particles collide and bounce off of one another using momentum. This is VERY EXPERIMENTAL. My algorithm isnt great...",getClass().getResource("/collision.png"),() -> {
-            getWindow().setScene(new BounceCollisionScene(toggleApplyGravity.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),sliderBounceObjectSize.getContainer().get()));
+            getWindow().setScene(new BounceCollisionScene(sliderG.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),sliderBounceObjectSize.getContainer().get()));
             SettingManager.DEFAULT_MANAGER.saveAll();
         });
 
         this.startMerge = new TitleButton(this, Vector.NULL(),new Vector(200,200), widgetColor,"","Particles collide and combine into larger particles",getClass().getResource("/merge.png"),() -> {
             int min = sliderMergeObjectSizeMin.getContainer().get();
             int max = sliderMergeObjectSizeMax.getContainer().get();
-            getWindow().setScene(new MergeCollisionScene(toggleApplyGravity.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),min,max));
+            getWindow().setScene(new MergeCollisionScene(sliderG.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),min,max));
             SettingManager.DEFAULT_MANAGER.saveAll();
         });
 

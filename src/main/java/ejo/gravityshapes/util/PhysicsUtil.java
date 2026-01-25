@@ -1,6 +1,7 @@
 package ejo.gravityshapes.util;
 
 import com.ejo.ui.element.PhysicsObject;
+import com.ejo.ui.element.shape.RegularPolygon;
 import com.ejo.util.math.Vector;
 
 public class PhysicsUtil {
@@ -11,7 +12,12 @@ public class PhysicsUtil {
 
     public static Vector getGravityField(float G, PhysicsObject obj, Vector pos) {
         Vector r = obj.getPos().getSubtracted(pos);
+
+        //Don't add a gravitational field inside an object
         if (r.getMagnitude() == 0) return new Vector(0,0);
+        if (obj.getElement() instanceof RegularPolygon && r.getMagnitude() <= (((RegularPolygon)obj.getElement()).getRadius()) / 2)
+            return new Vector(0, 0);
+
         Vector rHat = r.getUnitVector();
         double rMag = r.getMagnitude();
 

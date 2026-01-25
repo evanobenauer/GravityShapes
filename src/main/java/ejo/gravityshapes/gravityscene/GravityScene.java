@@ -3,13 +3,13 @@ package ejo.gravityshapes.gravityscene;
 import com.ejo.ui.Scene;
 import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.base.Tickable;
-import com.ejo.ui.element.shape.RegularPolygon;
 import com.ejo.ui.manager.DebugManager;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
 import ejo.gravityshapes.App;
 import ejo.gravityshapes.TitleScene;
 import ejo.gravityshapes.element.PhysicsObjectDraggable;
+import ejo.gravityshapes.element.ObjectsPolygon;
 import ejo.gravityshapes.manager.*;
 import ejo.gravityshapes.util.CollisionUtil;
 import ejo.gravityshapes.util.PhysicsUtil;
@@ -21,27 +21,30 @@ import java.util.Random;
 public abstract class GravityScene extends Scene {
 
     protected final StarManager starManager;
-    protected final boolean applyGravity;
+    protected final int G;
     public final boolean wallBounce;
 
-    public GravityScene(String title, boolean applyGravity, boolean wallBounce, boolean paths, boolean fieldLines, int objectCount, String spawnMode, int minM, int maxM) {
+    public GravityScene(String title, int G, boolean wallBounce, boolean paths, boolean fieldLines, int objectCount, String spawnMode, int minM, int maxM) {
         super(title);
-        this.applyGravity = applyGravity;
+        this.G = G;
         this.wallBounce = wallBounce;
+
+        //float deltaT = .05f;
+        float deltaT = .005f;
 
         this.starManager = new StarManager(this, 1, fieldLines ? 0 : 250);
         setDebugManager(new GravityDebugManager(this));
-        addSceneManagers(new ShootManager(this,256,minM,maxM));
+        addSceneManagers(new ShootManager(this,256,minM,maxM,G,deltaT));
 
-        if (fieldLines) addSceneManagers(new FieldLineManager(this,30));
+        if (fieldLines) addSceneManagers(new FieldLineManager(this,G,30));
         if (paths) addSceneManagers(new ParticleTrailManager(this,50));
-        //addSceneManagers(new SimulatedPathManager(this,50));
+        //addSceneManagers(new SimulatedPathManager(this,50,G));
 
         switch (spawnMode) {
             case "Random" ->
-                    generateObjectsRandomly(objectCount, minM, maxM, 1, .4f, .1f, .05f);
+                    generateObjectsRandomly(objectCount, minM, maxM, 1, .4f, 1f, deltaT);
             case "Radial" ->
-                    generateObjectsRadially(objectCount, 10, App.WINDOW.getSize().getYi() / 2, minM, maxM, 1, .04f, .1f, .05f);
+                    generateObjectsRadially(objectCount, 10, App.WINDOW.getSize().getYi() / 2, minM, maxM, 1, .04f, .1f, deltaT);
         }
     }
 
@@ -63,11 +66,11 @@ public abstract class GravityScene extends Scene {
             if (wallBounce) CollisionUtil.doWallBounce(obj1, .9);
 
             //Gravity Force
-            if (applyGravity) {
+            if (G != 0) {
                 for (Tickable e2 : tickables) {
                     if (e1.equals(e2) || !(e2 instanceof PhysicsObject obj2)) continue;
                     if (tickables.isRemovalQueued(obj2)) continue;
-                    obj1.addForce(PhysicsUtil.getGravityForce(1,obj1, obj2));
+                    obj1.addForce(PhysicsUtil.getGravityForce(G,obj1, obj2));
                 }
             }
         }
@@ -95,7 +98,7 @@ public abstract class GravityScene extends Scene {
 
             Color c = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 100);
 
-            RegularPolygon polygon = new RegularPolygon(this, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
+            ObjectsPolygon polygon = new ObjectsPolygon(this, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
             PhysicsObjectDraggable obj = new PhysicsObjectDraggable(this, pos, polygon);
             obj.setVelocity(v);
             obj.setMass(m);
@@ -124,7 +127,7 @@ public abstract class GravityScene extends Scene {
 
             Color c = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 100);
 
-            RegularPolygon polygon = new RegularPolygon(this, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
+            ObjectsPolygon polygon = new ObjectsPolygon(this, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
             PhysicsObjectDraggable obj = new PhysicsObjectDraggable(this, pos, polygon);
             obj.setVelocity(v);
             obj.setMass(m);

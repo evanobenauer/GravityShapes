@@ -20,9 +20,12 @@ import java.awt.*;
 public class SimulatedPathManager extends SceneManager {
 
     private final int steps;
-    public SimulatedPathManager(Scene scene, int steps) {
+    private final int G;
+
+    public SimulatedPathManager(Scene scene, int steps, int G) {
         super(scene);
         this.steps = steps;
+        this.G = G;
     }
 
     @Override
@@ -43,7 +46,7 @@ public class SimulatedPathManager extends SceneManager {
                         particle.setSteps(i); //Only call this if on combined mode
                         return force;
                     }
-                    force.add(PhysicsUtil.getGravityField(1,p,pos).getMultiplied(obj1.getMass()));
+                    force.add(PhysicsUtil.getGravityField(G,p,pos).getMultiplied(obj1.getMass()));
                 }
                 return force;
             },(obj1, pos, vel, force, i) -> {

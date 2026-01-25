@@ -14,8 +14,11 @@ import java.awt.*;
 public class FieldLineManager extends SceneManager {
 
     private final int inverseDensity;
-    public FieldLineManager(Scene scene, int inverseDensity) {
+    private final int G;
+
+    public FieldLineManager(Scene scene, int G, int inverseDensity) {
         super(scene);
+        this.G = G;
         this.inverseDensity = inverseDensity;
     }
 
@@ -33,7 +36,7 @@ public class FieldLineManager extends SceneManager {
                 Vector gravityForce = Vector.NULL();
                 for (DrawableElement otherObject : scene.getDrawableElements()) {
                     if (!(otherObject instanceof PhysicsObject obj)) continue;
-                    Vector gravityFromOtherObject = PhysicsUtil.getGravityField(1, obj, new Vector(x, y).getMultiplied(inverseDensity));
+                    Vector gravityFromOtherObject = PhysicsUtil.getGravityField(G, obj, new Vector(x, y).getMultiplied(inverseDensity));
                     if (!(String.valueOf(gravityFromOtherObject.getMagnitude())).equals("NaN"))
                         gravityForce.add(gravityFromOtherObject);
                 }

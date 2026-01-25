@@ -6,6 +6,7 @@ import com.ejo.ui.element.Line;
 import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.math.Vector;
+import com.ejo.util.misc.ColorUtil;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class ParticleTrailManager extends SceneManager {
 
             //Draw Trail Line
             Vector[] vertices = list.toArray(new Vector[0]);
-            Line line = new Line(scene,2,Line.Type.DOTTED,Color.WHITE, vertices);
+            Line line = new Line(scene,2,Line.Type.DOTTED,new Color(150,150,150,200), vertices);
             line.setFaded(true);
             line.draw();
         }
@@ -71,7 +72,7 @@ public class ParticleTrailManager extends SceneManager {
 
             //Draw Trail Line
             Vector[] vertices = list.toArray(new Vector[0]);
-            Line line = new Line(scene,2,Line.Type.DOTTED,Color.WHITE, vertices);
+            Line line = new Line(scene,2,Line.Type.DOTTED, Color.WHITE, vertices);
             line.setFaded(true);
             line.draw();
         }

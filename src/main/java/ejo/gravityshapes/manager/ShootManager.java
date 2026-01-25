@@ -9,6 +9,7 @@ import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.action.DoOnce;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
+import ejo.gravityshapes.element.ObjectsPolygon;
 import ejo.gravityshapes.element.PhysicsObjectDraggable;
 import ejo.gravityshapes.gravityscene.BounceCollisionScene;
 import ejo.gravityshapes.gravityscene.GravityScene;
@@ -26,6 +27,9 @@ public class ShootManager extends SceneManager {
     private boolean rapid;
     private boolean tripleRapid;
 
+    private final int G;
+    private final float deltaT;
+
     private Vector shootPos;
     private Vector shootVelocity;
 
@@ -37,7 +41,7 @@ public class ShootManager extends SceneManager {
     private final DoOnce shooter;
     private final DoOnce shooterInitializer;
 
-    public ShootManager(Scene scene, int shootLineSteps, int sizeMin, int sizeMax) {
+    public ShootManager(Scene scene, int shootLineSteps, int sizeMin, int sizeMax, int G, float deltaT) {
         super(scene);
 
         this.shootLineSteps = shootLineSteps;
@@ -45,6 +49,9 @@ public class ShootManager extends SceneManager {
         float p = 1;
         int avgSize = (sizeMin + sizeMax) / 2;
         this.shootSize = Math.pow(3 * avgSize / (4 * Math.PI * p), 1f / 3);
+
+        this.G = G;
+        this.deltaT = deltaT;
 
         this.shooting = false;
         this.rapid = false;
@@ -132,6 +139,7 @@ public class ShootManager extends SceneManager {
         //Generate Shooter Line Vertices
         SimulatedParticle particle = new SimulatedParticle(new PhysicsObject(scene, shootPos, polygon), shootLineSteps);
         particle.getPhysicsObject().setVelocity(shootVelocity);
+        particle.getPhysicsObject().setDeltaT(deltaT);
         Vector[] vectors = particle.getFuturePositions((obj, pos, i) -> {
             Vector force = Vector.NULL();
             for (DrawableElement element : scene.getDrawableElements()) {
@@ -140,7 +148,7 @@ public class ShootManager extends SceneManager {
                     if (!(scene instanceof BounceCollisionScene))particle.setSteps(i); //Only call this if on combined mode
                     return force;
                 }
-                force.add(PhysicsUtil.getGravityField(1, p, pos).getMultiplied(obj.getMass()));
+                force.add(PhysicsUtil.getGravityField(G, p, pos).getMultiplied(obj.getMass()));
             }
             return force;
         }, (obj1, pos, vel, force, i) -> {
@@ -171,8 +179,6 @@ public class ShootManager extends SceneManager {
         } else {
             shooterInitializer.reset();
             shooter.run(this::addShotObject);
-            shootPos = Vector.NULL();
-            shootVelocity = Vector.NULL();
         }
     }
 
@@ -188,8 +194,6 @@ public class ShootManager extends SceneManager {
             }
         } else {
             shooterInitializer.reset();
-            shootPos = Vector.NULL();
-            shootVelocity = Vector.NULL();
         }
     }
 
@@ -198,11 +202,12 @@ public class ShootManager extends SceneManager {
         Random random = new Random();
         Color randomColor = new Color(random.nextInt(25, 255), random.nextInt(25, 255), random.nextInt(25, 255), 100);
 
-        RegularPolygon poly = new RegularPolygon(scene, Vector.NULL(), randomColor, shootSize, shootVertices, shootSpin);
+        ObjectsPolygon poly = new ObjectsPolygon(scene, Vector.NULL(), randomColor, shootSize, shootVertices, shootSpin);
         PhysicsObjectDraggable obj = new PhysicsObjectDraggable(scene, shootPos, poly);
 
         obj.setMass((double) 4 / 3 * Math.PI * Math.pow(shootSize, 3));
         obj.setVelocity(shootVelocity);
+        obj.setDeltaT(deltaT);
         obj.setTheta(shootSpin.getRadians());
 
         scene.addElement(obj, true);
@@ -215,7 +220,7 @@ public class ShootManager extends SceneManager {
 
         boolean neg = false;
         for (int i = 0; i < 3; i++) {
-            RegularPolygon poly = new RegularPolygon(scene, Vector.NULL(), randomColor, shootSize, shootVertices, shootSpin);
+            ObjectsPolygon poly = new ObjectsPolygon(scene, Vector.NULL(), randomColor, shootSize, shootVertices, shootSpin);
             Vector tempShootPos = shootPos;
             Vector vel = shootVelocity.getUnitVector();
             double space = shootSize * 4;
@@ -227,6 +232,7 @@ public class ShootManager extends SceneManager {
 
             obj.setMass((double) 4 / 3 * Math.PI * Math.pow(shootSize, 3));
             obj.setVelocity(shootVelocity);
+            obj.setDeltaT(deltaT);
             obj.setTheta(shootSpin.getRadians());
 
             scene.addElement(obj, true);

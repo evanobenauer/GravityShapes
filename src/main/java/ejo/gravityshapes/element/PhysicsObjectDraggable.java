@@ -14,7 +14,7 @@ public class PhysicsObjectDraggable extends PhysicsObject implements Interactabl
     private boolean dragging;
     private Vector mouseOffset;
 
-    public PhysicsObjectDraggable(Scene scene, Vector pos, RegularPolygon element) {
+    public PhysicsObjectDraggable(Scene scene, Vector pos, ObjectsPolygon element) {
         super(scene, pos, element);
         this.dragging = false;
         this.mouseOffset = Vector.NULL();
