@@ -20,9 +20,11 @@ Gravity Shapes has 6 main universal options users can toggle on and off
   - Objects will bounce off of the walls with 90% restitution to keep all particles on screen
 - *Object Paths*
   - Objects draw a path that fades to dark behind them
+    
     ![gif](img/trails.gif.gif)
 - *Field Lines*
   - Draws all gravitational field lines
+    
     ![gif](img/fieldlines.gif.gif)
   
 # Object Shooter
