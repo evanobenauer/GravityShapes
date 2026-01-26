@@ -64,7 +64,7 @@ Velocity after the collision is determined using perfectly inelastic conservatio
 ![gif](img/mergeRadial.gif.gif)
 
 *Rotational Motion*
-- Objects in Merge Mode sping their polygons according to Rotational Motion.
+- Objects in Merge Mode spin their polygons according to Rotational Motion.
 - All objects have an accurate Rotational Inertia function set by the shape
 - When objects collide, depending on their angle, they will apply a torque and spin the object
 - The "Collision Time" for the torque is dependent on the step time of the particle
@@ -74,6 +74,9 @@ Velocity after the collision is determined using perfectly inelastic conservatio
 # Bounce Mode (Left Button)
 THIS MODE IS NOT FINISHED
 Objects bounce off of one another using Conservaton of Momentum
+
+Velocity for both particles after the collision is determined using perfectly elastic conservation of momentum with a restitution value of 0.6
+
   
 ![gif](img/bounceCollision.gif.gif)
     
