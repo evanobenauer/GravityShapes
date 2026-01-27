@@ -53,10 +53,16 @@ The object shooter will draw a blue outline of the object that is about to be sh
 - By default, the shooter size will equal the minimum spawn size for the scene
 - The shooter size can be changed by clicking UP or DOWN on the keyboard while pulling back
 
-# Object Locking
-Objects can be locked in place.
-The lock with toggle on and off with every right click. 
-The object will display a blue outline if locked.
+# Object Interactions
+
+*Object Dragging*
+- Objects can be dragged across the screen using the mouse.
+- Dragging will remove all velocity that the object currently has
+
+*Object Locking*
+- Objects can be locked in place. When locked, and object will have no veloctiy and will be unable to be moved by other object, but can still be dragged
+- The lock with toggle on and off with every right click. 
+- The object will display a blue outline if locked.
   ![gif](img/locked.gif)
 
 # Merge Mode (Middle Button)
