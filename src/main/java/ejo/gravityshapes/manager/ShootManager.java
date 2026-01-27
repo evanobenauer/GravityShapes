@@ -10,7 +10,7 @@ import com.ejo.util.action.DoOnce;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
 import ejo.gravityshapes.element.ObjectsPolygon;
-import ejo.gravityshapes.element.PhysicsObjectDraggable;
+import ejo.gravityshapes.element.SpecialPhysicsObject;
 import ejo.gravityshapes.gravityscene.BounceCollisionScene;
 import ejo.gravityshapes.gravityscene.GravityScene;
 import ejo.gravityshapes.util.CollisionUtil;
@@ -203,7 +203,7 @@ public class ShootManager extends SceneManager {
         Color randomColor = new Color(random.nextInt(25, 255), random.nextInt(25, 255), random.nextInt(25, 255), 100);
 
         ObjectsPolygon poly = new ObjectsPolygon(scene, Vector.NULL(), randomColor, shootSize, shootVertices, shootSpin);
-        PhysicsObjectDraggable obj = new PhysicsObjectDraggable(scene, shootPos, poly);
+        SpecialPhysicsObject obj = new SpecialPhysicsObject(scene, shootPos, poly);
 
         obj.setMass((double) 4 / 3 * Math.PI * Math.pow(shootSize, 3));
         obj.setVelocity(shootVelocity);
@@ -228,7 +228,7 @@ public class ShootManager extends SceneManager {
                 tempShootPos = vel.getCross(Vector.K()).getMultiplied(space * (neg ? 1 : -1)).getAdded(shootPos);
                 neg = !neg;
             }
-            PhysicsObjectDraggable obj = new PhysicsObjectDraggable(scene, tempShootPos, poly);
+            SpecialPhysicsObject obj = new SpecialPhysicsObject(scene, tempShootPos, poly);
 
             obj.setMass((double) 4 / 3 * Math.PI * Math.pow(shootSize, 3));
             obj.setVelocity(shootVelocity);

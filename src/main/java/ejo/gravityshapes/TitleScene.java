@@ -18,6 +18,9 @@ import ejo.gravityshapes.manager.StarManager;
 
 import java.awt.*;
 
+//TODO: Add collision particles
+// Add Force/Velocity vector lines option to main screen
+
 public class TitleScene extends Scene {
 
     //Managers
@@ -93,7 +96,7 @@ public class TitleScene extends Scene {
         this.sliderG = new Slider<>(this,sliderObjectCount.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("gValue",1),0,1000,1,"G Strength","Determines the strength of gravity between particles");
         this.cycleSpawnPattern = new Cycle<>(this,sliderG.getPos().getAdded(0,45),new Vector(250,40),widgetColor,"Spawn","Pattern for spawning the default shapes",new Setting<>("spawnPattern","Random"),"Random","Radial");
         this.toggleWallBounce = new Toggle(this, cycleSpawnPattern.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("wallBounce",false),"Wall Bounce","Bounces objects off of the walls");
-        this.togglePaths = new Toggle(this,toggleWallBounce.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("paths",false),"Paths","Shows a path of a particle's recent positions");
+        this.togglePaths = new Toggle(this,toggleWallBounce.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("paths",false),"Particle Paths","Shows a path of a particle's recent positions");
         this.toggleFieldLines = new Toggle(this,togglePaths.getPos().getAdded(0,45),new Vector(250,40),widgetColor,new Setting<>("fieldLines",false),"Field Lines","Shows all gravitational field lines. Very laggy");
 
         this.sliderBounceObjectSize = new Slider<>(this,Vector.NULL(),new Vector(200,50),widgetColor,new Setting<>("bounceObjectSize",5),1,30,1,"Radius","Size of all objects on screen");

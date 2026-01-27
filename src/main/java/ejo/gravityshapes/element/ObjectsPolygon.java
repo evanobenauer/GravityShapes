@@ -29,7 +29,7 @@ public class ObjectsPolygon extends RegularPolygon {
         //drawSillyOutline();
     }
 
-    private void drawSillyOutline() {
+    public void drawSillyOutline() {
         Color c = new Color(0, 125, 200);
         GL11.glColor4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, c.getAlpha() / 255f);
         GL11.glDisable(GL11.GL_LINE_STIPPLE);

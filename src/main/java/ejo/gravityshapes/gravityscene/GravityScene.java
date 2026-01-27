@@ -4,12 +4,13 @@ import com.ejo.ui.Scene;
 import com.ejo.ui.Window;
 import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.base.Tickable;
+import com.ejo.ui.element.shape.RegularPolygon;
 import com.ejo.ui.manager.DebugManager;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
 import ejo.gravityshapes.App;
 import ejo.gravityshapes.TitleScene;
-import ejo.gravityshapes.element.PhysicsObjectDraggable;
+import ejo.gravityshapes.element.SpecialPhysicsObject;
 import ejo.gravityshapes.element.ObjectsPolygon;
 import ejo.gravityshapes.manager.*;
 import ejo.gravityshapes.util.CollisionUtil;
@@ -34,7 +35,8 @@ public abstract class GravityScene extends Scene {
 
         this.starManager = new StarManager(this, 1, fieldLines ? 0 : 250);
         setDebugManager(new GravityDebugManager(this));
-        addSceneManagers(new ShootManager(this,256,minM,maxM,G,deltaT));
+        int steps = 256;
+        addSceneManagers(new ShootManager(this,steps,minM,maxM,G,deltaT));
 
         if (fieldLines) addSceneManagers(new FieldLineManager(this,G,40));
         if (paths) addSceneManagers(new ParticleTrailManager(this,(int)(1/deltaT * 2.5)));
@@ -99,7 +101,7 @@ public abstract class GravityScene extends Scene {
             Color c = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 100);
 
             ObjectsPolygon polygon = new ObjectsPolygon(this, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
-            PhysicsObjectDraggable obj = new PhysicsObjectDraggable(this, pos, polygon);
+            SpecialPhysicsObject obj = new SpecialPhysicsObject(this, pos, polygon);
             obj.setVelocity(v);
             obj.setMass(m);
             obj.setRotationalInertia(2f / 5 * m * r * r);
@@ -128,7 +130,7 @@ public abstract class GravityScene extends Scene {
             Color c = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 100);
 
             ObjectsPolygon polygon = new ObjectsPolygon(this, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
-            PhysicsObjectDraggable obj = new PhysicsObjectDraggable(this, pos, polygon);
+            SpecialPhysicsObject obj = new SpecialPhysicsObject(this, pos, polygon);
             obj.setVelocity(v);
             obj.setMass(m);
             obj.setRotationalInertia(2f / 5 * m * r * r);
@@ -177,6 +179,15 @@ public abstract class GravityScene extends Scene {
             pos.add(new Vector(0, 10));
 
             this.fontRenderer.drawDynamicString("Hov V: " + obj.getVelocity().toString2D(), pos, Color.WHITE);
+            pos.add(new Vector(0, 10));
+
+            this.fontRenderer.drawDynamicString("Hov Om: " + obj.getOmega(), pos, Color.WHITE);
+            pos.add(new Vector(0, 10));
+
+            this.fontRenderer.drawDynamicString("Hov Co: " + ((RegularPolygon)obj.getElement()).getColor(), pos, Color.WHITE);
+            pos.add(new Vector(0, 10));
+
+            this.fontRenderer.drawDynamicString("Hov He: " + ((SpecialPhysicsObject)obj).heat, pos, Color.WHITE);
             pos.add(new Vector(0, 10));
         }
     }

@@ -5,7 +5,7 @@ import com.ejo.ui.element.base.Tickable;
 import com.ejo.ui.element.shape.RegularPolygon;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
-import ejo.gravityshapes.element.PhysicsObjectDraggable;
+import ejo.gravityshapes.element.SpecialPhysicsObject;
 import ejo.gravityshapes.util.CollisionUtil;
 
 import java.awt.*;
@@ -51,6 +51,10 @@ public class MergeCollisionScene extends GravityScene {
     }
 
     //TODO: Make a "Bop" sound effect from the collision
+    //TODO: Spawn extra mini particles that randomly explode from the main particle upon the collision?
+    // Release the particles from the point of collision. Have them fly out depending on the side of both particles.
+    // If particles are more similar in size, they will fly out tangentially. If one is much bigger than the other,
+    // they will fly out in the direction of the smaller particle
     public void doCollisionMerge(PhysicsObject obj1, PhysicsObject obj2) {
         RegularPolygon poly1 = ((RegularPolygon) obj1.getElement());
         RegularPolygon poly2 = ((RegularPolygon) obj2.getElement());
@@ -90,10 +94,10 @@ public class MergeCollisionScene extends GravityScene {
         //============= Visuals ==============
 
         //Set Average Color
-        int red = (int) (poly1.getColor().getRed() * massWeight + poly2.getColor().getRed() * (1 - massWeight));
-        int green = (int) (poly1.getColor().getGreen() * massWeight + poly2.getColor().getGreen() * (1 - massWeight));
-        int blue = (int) (poly1.getColor().getBlue() * massWeight + poly2.getColor().getBlue() * (1 - massWeight));
-        int alpha = (int) (poly1.getColor().getAlpha() * massWeight + poly2.getColor().getAlpha() * (1 - massWeight));
+        int red = (int) Math.round(poly1.getColor().getRed() * massWeight + poly2.getColor().getRed() * (1 - massWeight));
+        int green = (int) Math.round(poly1.getColor().getGreen() * massWeight + poly2.getColor().getGreen() * (1 - massWeight));
+        int blue = (int) Math.round(poly1.getColor().getBlue() * massWeight + poly2.getColor().getBlue() * (1 - massWeight));
+        int alpha = (int) Math.round(poly1.getColor().getAlpha() * massWeight + poly2.getColor().getAlpha() * (1 - massWeight));
         poly1.setColor(new Color(red, green, blue, alpha));
 
         //Set Average Polygon Type
@@ -107,13 +111,30 @@ public class MergeCollisionScene extends GravityScene {
         //Update Rotational Inertia
         obj1.setRotationalInertia(2f / 5 * obj1.getMass() * Math.pow(poly1.getRadius(),2));
 
+        //Set collision heat
+        //setCollisionHeat(obj1,obj2,massWeight);
+
         //Set Dragging
-        if (((PhysicsObjectDraggable) obj2).isDragging())
-            ((PhysicsObjectDraggable) obj1).setDragging(true);
-        ((PhysicsObjectDraggable) obj2).setDragging(false);
+        if (((SpecialPhysicsObject) obj2).isDragging())
+            ((SpecialPhysicsObject) obj1).setDragging(true);
+        ((SpecialPhysicsObject) obj2).setDragging(false);
+
+        //Set Locked
+        if (((SpecialPhysicsObject) obj2).isLocked()) {
+            ((SpecialPhysicsObject) obj1).setLocked(true);
+            ((SpecialPhysicsObject) obj1).setLockedPos(((SpecialPhysicsObject) obj2).getLockedPos());
+        }
+        ((SpecialPhysicsObject) obj2).setLocked(false);
 
         //Delete old object
         removeElement(obj2, true);
+    }
+
+    private void setCollisionHeat(PhysicsObject obj1, PhysicsObject obj2, double massWeight) {
+        Vector obj2RefVelocity = obj2.getVelocity().getSubtracted(obj1.getVelocity());
+        int heat = (int)(.5f *obj2.getMass()*Math.pow(obj2RefVelocity.getMagnitude(),2)) /1000;
+        ((SpecialPhysicsObject)obj1).heat = (int) (((SpecialPhysicsObject)obj1).heat * massWeight + ((SpecialPhysicsObject)obj2).heat * (1-massWeight));
+        ((SpecialPhysicsObject) obj1).heat += heat;
     }
 
     public void applyTorqueFromCollision(PhysicsObject obj1, PhysicsObject obj2, double collisionTime) {
