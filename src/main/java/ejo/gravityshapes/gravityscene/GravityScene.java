@@ -37,6 +37,7 @@ public abstract class GravityScene extends Scene {
         setDebugManager(new GravityDebugManager(this));
         int steps = 256;
         addSceneManagers(new ShootManager(this,steps,minM,maxM,G,deltaT));
+        addSceneManagers(new MoonMakerManager(this,G,deltaT));
 
         if (fieldLines) addSceneManagers(new FieldLineManager(this,G,40));
         if (paths) addSceneManagers(new ParticleTrailManager(this,(int)(1/deltaT * 2.5)));
@@ -89,7 +90,6 @@ public abstract class GravityScene extends Scene {
         Random random = new Random();
         for (int i = 0; i < count; i++) {
             long m = minM >= maxM ? minM : random.nextInt(minM, maxM);
-            double r = Math.pow(3 * m / (4 * Math.PI * density), 1f / 3); //3D
 
             //Random Positioning
             Vector pos = new Vector(random.nextDouble(App.WINDOW.getSize().getX()), random.nextDouble(App.WINDOW.getSize().getY()));
@@ -98,14 +98,7 @@ public abstract class GravityScene extends Scene {
             float k = minV >= maxV ? minV : random.nextFloat(minV, maxV);
             Vector v = new Vector(k, k);
 
-            Color c = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 100);
-
-            ObjectsPolygon polygon = new ObjectsPolygon(this, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
-            SpecialPhysicsObject obj = new SpecialPhysicsObject(this, pos, polygon);
-            obj.setVelocity(v);
-            obj.setMass(m);
-            obj.setRotationalInertia(2f / 5 * m * r * r);
-            obj.setDeltaT(deltaT);
+            SpecialPhysicsObject obj = createPhysicsObject(this,random,pos,v,deltaT,m,density);
             addElement(obj, false);
         }
     }
@@ -127,16 +120,22 @@ public abstract class GravityScene extends Scene {
             Vector centerDistVec = pos.getSubtracted(center);
             Vector v = centerDistVec.getCross(Vector.K()).getUnitVector().getMultiplied(k * centerDistVec.getMagnitude());
 
-            Color c = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 100);
-
-            ObjectsPolygon polygon = new ObjectsPolygon(this, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
-            SpecialPhysicsObject obj = new SpecialPhysicsObject(this, pos, polygon);
-            obj.setVelocity(v);
-            obj.setMass(m);
-            obj.setRotationalInertia(2f / 5 * m * r * r);
-            obj.setDeltaT(deltaT);
+            SpecialPhysicsObject obj = createPhysicsObject(this,random,pos,v,deltaT,m,density);
             addElement(obj, false);
         }
+    }
+
+    public static SpecialPhysicsObject createPhysicsObject(Scene scene, Random random, Vector pos, Vector velocity, float deltaT, double mass, float density) {
+        double r = Math.pow(3 * mass / (4 * Math.PI * density), 1f / 3); //3D
+        Color c = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 100);
+
+        ObjectsPolygon polygon = new ObjectsPolygon(scene, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
+        SpecialPhysicsObject obj = new SpecialPhysicsObject(scene, pos, polygon);
+        obj.setVelocity(velocity);
+        obj.setMass(mass);
+        obj.setRotationalInertia(2f / 5 * mass * r * r);
+        obj.setDeltaT(deltaT);
+        return obj;
     }
 
     public ShootManager getShootManager() {

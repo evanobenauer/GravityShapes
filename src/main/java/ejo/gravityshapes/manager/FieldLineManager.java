@@ -41,7 +41,7 @@ public class FieldLineManager extends SceneManager {
                         gravityForce.add(gravityFromOtherObject);
                 }
                 double size = Math.min(Math.max(gravityForce.getMagnitude(), .2), 1) * 10;
-                Color c = Color.WHITE;//getRedBlueScaledColor(1 - Math.min(255,gravityForce.getMagnitude() * 50) / 255);
+                Color c = getRedWhiteScaledColor(Math.min(255,gravityForce.getMagnitude() * 75) / 255);
                 Line lineUI = new Line(scene, new Vector(x, y).getMultiplied(inverseDensity), gravityForce.getTheta(), size, .5, Line.Type.PLAIN,ColorUtil.getWithAlpha(c,100));
                 lineUI.draw();
             }
@@ -49,9 +49,17 @@ public class FieldLineManager extends SceneManager {
     }
 
     public static Color getRedBlueScaledColor(double scale) {
-        int r = (int) Math.clamp((1 - scale) * 255,0,255);
+        int r = (int) Math.clamp(scale * 255,0,255);
         int g = 0;
-        int b = (int) Math.clamp(scale * 255,0,255);
+        int b = (int) Math.clamp((1 - scale) * 255,0,255);
+
+        return new Color(r, g, b);
+    }
+
+    public static Color getRedWhiteScaledColor(double scale) {
+        int r = 255;
+        int g = (int) Math.clamp((1 - scale) * 255,0,255);
+        int b = (int) Math.clamp((1 - scale) * 255,0,255);
 
         return new Color(r, g, b);
     }
