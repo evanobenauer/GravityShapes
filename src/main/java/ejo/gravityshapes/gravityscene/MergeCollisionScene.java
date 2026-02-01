@@ -24,7 +24,7 @@ public class MergeCollisionScene extends GravityScene {
                 ((RegularPolygon) obj.getElement()).setRotation(new Angle(obj.getTheta()));
 
                 //Slow rotation back to stable over time? Like some kind of drag?
-                float slowSpeed = 0.1f;
+                float slowSpeed = 1f;
                 if (Math.abs(obj.getOmega()) > 0) {
                     if (obj.getOmega() > 0) obj.setOmega(obj.getOmega() - slowSpeed / 360);
                     if (obj.getOmega() < 0) obj.setOmega(obj.getOmega() + slowSpeed / 360);
