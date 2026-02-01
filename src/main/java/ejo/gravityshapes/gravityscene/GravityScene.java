@@ -35,7 +35,7 @@ public abstract class GravityScene extends Scene {
 
         this.starManager = new StarManager(this, 1, fieldLines ? 0 : 250);
         setDebugManager(new GravityDebugManager(this));
-        int steps = 5000;//256;
+        int steps = 256;
         addSceneManagers(new ShootManager(this,steps,minM,maxM,G,deltaT));
         addSceneManagers(new MoonMakerManager(this,5,G,deltaT));
 
