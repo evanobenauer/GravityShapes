@@ -35,9 +35,9 @@ public abstract class GravityScene extends Scene {
 
         this.starManager = new StarManager(this, 1, fieldLines ? 0 : 250);
         setDebugManager(new GravityDebugManager(this));
-        int steps = 256;
+        int steps = 5000;//256;
         addSceneManagers(new ShootManager(this,steps,minM,maxM,G,deltaT));
-        addSceneManagers(new MoonMakerManager(this,G,deltaT));
+        addSceneManagers(new MoonMakerManager(this,5,G,deltaT));
 
         if (fieldLines) addSceneManagers(new FieldLineManager(this,G,40));
         if (paths) addSceneManagers(new ParticleTrailManager(this,(int)(1/deltaT * 2.5)));
@@ -127,7 +127,7 @@ public abstract class GravityScene extends Scene {
 
     public static SpecialPhysicsObject createPhysicsObject(Scene scene, Random random, Vector pos, Vector velocity, float deltaT, double mass, float density) {
         double r = Math.pow(3 * mass / (4 * Math.PI * density), 1f / 3); //3D
-        Color c = new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 100);
+        Color c = new Color(random.nextInt(25,255), random.nextInt(25,255), random.nextInt(25,255), 100);
 
         ObjectsPolygon polygon = new ObjectsPolygon(scene, null, c, r, random.nextInt(3, 9), new Angle(random.nextInt(0, 360), true));
         SpecialPhysicsObject obj = new SpecialPhysicsObject(scene, pos, polygon);

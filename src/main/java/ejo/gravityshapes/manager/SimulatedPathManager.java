@@ -4,15 +4,12 @@ import com.ejo.ui.Scene;
 import com.ejo.ui.element.DrawableElement;
 import com.ejo.ui.element.Line;
 import com.ejo.ui.element.PhysicsObject;
-import com.ejo.ui.element.shape.Rectangle;
 import com.ejo.ui.element.shape.RegularPolygon;
 import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.math.Vector;
-import com.ejo.util.misc.ColorUtil;
 import ejo.gravityshapes.element.SimulatedParticle;
 import ejo.gravityshapes.util.CollisionUtil;
 import ejo.gravityshapes.util.PhysicsUtil;
-import org.lwjgl.glfw.GLFW;
 
 import java.awt.*;
 
@@ -51,8 +48,6 @@ public class SimulatedPathManager extends SceneManager {
                 return force;
             },(obj1, pos, vel, force, i) -> {
                 CollisionUtil.doWallBounce(scene, pos, vel, .9);
-                //if (scene instanceof BounceCollisionScene)
-                //Place Momentum collision code here
             });
 
             //Draw Shooter Line

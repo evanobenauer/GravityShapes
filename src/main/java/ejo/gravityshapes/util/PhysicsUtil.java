@@ -25,8 +25,4 @@ public class PhysicsUtil {
         return rHat.multiply(magnitude);
     }
 
-    //For Collisionless things. Add this to getGravityField
-    //         if (r.getMagnitude() <= (((RegularPolygon)obj1.getPolygon()).getRadius() + ((RegularPolygon)obj2.getPolygon()).getRadius()) / 2)
-    //            return new Vector(0, 0);
-
 }

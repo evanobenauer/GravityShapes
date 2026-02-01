@@ -17,11 +17,13 @@ import java.util.Random;
 
 public class MoonMakerManager extends SceneManager {
 
-    private int G;
-    private float deltaT;
+    private final int distance;
+    private final int G;
+    private final float deltaT;
 
-    public MoonMakerManager(Scene scene, int G, float deltaT) {
+    public MoonMakerManager(Scene scene, int distanceRadiusMul, int G, float deltaT) {
         super(scene);
+        this.distance = distanceRadiusMul;
         this.G = G;
         this.deltaT = deltaT;
     }
@@ -29,12 +31,8 @@ public class MoonMakerManager extends SceneManager {
     @Override
     public void onKeyPress(int key, int scancode, int action, int mods) {
         if (action != GLFW.GLFW_RELEASE && key == GLFW.GLFW_KEY_M) {
-            try {
-                if (scene.getMouseHoveredHandler().getTop() instanceof SpecialPhysicsObject obj)
-                    spawnMoon(obj, obj.getMass() / 200, 1, obj.getPolygon().getRadius() * 2);
-            } catch (NoSuchElementException e) {
-
-            }
+            if (scene.getMouseHoveredHandler().getTop() instanceof SpecialPhysicsObject obj)
+                spawnMoon(obj, obj.getMass() / 200, 1, obj.getPolygon().getRadius() * distance);
         }
     }
 

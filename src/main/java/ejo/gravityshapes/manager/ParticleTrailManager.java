@@ -6,13 +6,9 @@ import com.ejo.ui.element.Line;
 import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.math.Vector;
-import com.ejo.util.misc.ColorUtil;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.*;
 
 public class ParticleTrailManager extends SceneManager {
 
@@ -27,12 +23,13 @@ public class ParticleTrailManager extends SceneManager {
 
     @Override
     public void draw(Vector mousePos) {
-        drawAndUpdatePreviousPositions(steps);
+        HashSet<PhysicsObject> objSet = new HashSet<>();
+
+        addPositionsFromElements(objSet);
+        modifyAndDrawPositions(objSet);
     }
 
-    //Ya know... This kinda works pretty well... I'm happy with it
-    private void drawAndUpdatePreviousPositions(int steps) {
-        HashSet<PhysicsObject> objSet = new HashSet<>();
+    private void addPositionsFromElements(HashSet<PhysicsObject> objSet) {
         //Add positions from elements
         for (DrawableElement element : scene.getDrawableElements()) {
             if (!(element instanceof PhysicsObject obj)) continue;
@@ -43,13 +40,24 @@ public class ParticleTrailManager extends SceneManager {
             LinkedList<Vector> list = previousPositions.get(obj);
             list.addFirst(obj.getPos());
         }
+    }
 
+    private void modifyAndDrawPositions(HashSet<PhysicsObject> objSet) {
         //Remove positions from current elements and draw lines
+        ArrayList<PhysicsObject> removalList = new ArrayList<>();
+
         for (PhysicsObject obj : previousPositions.keySet()) {
+
+            //Remove previous positions if the list is too big
             LinkedList<Vector> list = previousPositions.get(obj);
             if (list.size() > steps) list.removeLast();
             if (!objSet.contains(obj) && !list.isEmpty()) list.removeLast();
-            if (list.isEmpty()) continue;
+
+            //Remove the key reference if the list is empty (particle is gone)
+            if (list.isEmpty()) {
+                removalList.add(obj);
+                continue;
+            }
 
             //Draw Trail Line
             Vector[] vertices = list.toArray(new Vector[0]);
@@ -57,24 +65,9 @@ public class ParticleTrailManager extends SceneManager {
             line.setFaded(true);
             line.draw();
         }
+
+        //Remove all empty lists
+        for (PhysicsObject obj : removalList) previousPositions.remove(obj);
     }
 
-    @Deprecated //This one is probably a little faster, but the trails are instantly removed when an object collides
-    private void drawAndUpdatePreviousPositionsO(int steps) {
-        for (DrawableElement element : scene.getDrawableElements()) {
-            if (!(element instanceof PhysicsObject obj)) continue;
-
-            //Update Position Lists
-            if (!previousPositions.containsKey(obj)) previousPositions.put(obj,new LinkedList<>());
-            LinkedList<Vector> list = previousPositions.get(obj);
-            list.addFirst(obj.getPos());
-            if (list.size() > steps) list.removeLast();
-
-            //Draw Trail Line
-            Vector[] vertices = list.toArray(new Vector[0]);
-            Line line = new Line(scene,2,Line.Type.DOTTED, Color.WHITE, vertices);
-            line.setFaded(true);
-            line.draw();
-        }
-    }
 }

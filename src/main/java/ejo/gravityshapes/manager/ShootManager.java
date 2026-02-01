@@ -153,13 +153,6 @@ public class ShootManager extends SceneManager {
             return force;
         }, (obj1, pos, vel, force, i) -> {
             if (((GravityScene) scene).wallBounce) CollisionUtil.doWallBounce(scene, pos, vel, .9);
-            /*if (scene instanceof BounceCollisionScene s) {
-                for (DrawableElement element : scene.getDrawableElements()) {
-                    if (!(element instanceof PhysicsObject obj2)) continue;
-                    s.doPushCollision(obj1,obj2,obj1.getPos(),obj1.getVelocity(),obj1.getNetForce(),obj2.getPos(),obj2.getVelocity(),obj2.getNetForce(),.6,false,0); //This needs to be modified to accept the futurePos and futureVel
-                }
-            }*/
-
         });
 
         //Draw Shooter Line
@@ -205,8 +198,9 @@ public class ShootManager extends SceneManager {
         ObjectsPolygon poly = new ObjectsPolygon(scene, Vector.NULL(), randomColor, shootSize, shootVertices, shootSpin);
         SpecialPhysicsObject obj = new SpecialPhysicsObject(scene, shootPos, poly);
 
-        obj.setMass((double) 4 / 3 * Math.PI * Math.pow(shootSize, 3));
         obj.setVelocity(shootVelocity);
+        obj.setMass((double) 4 / 3 * Math.PI * Math.pow(shootSize, 3));
+        obj.setRotationalInertia(2f / 5 * obj.getMass() * shootSize * shootSize);
         obj.setDeltaT(deltaT);
         obj.setTheta(shootSpin.getRadians());
 
@@ -230,8 +224,9 @@ public class ShootManager extends SceneManager {
             }
             SpecialPhysicsObject obj = new SpecialPhysicsObject(scene, tempShootPos, poly);
 
-            obj.setMass((double) 4 / 3 * Math.PI * Math.pow(shootSize, 3));
             obj.setVelocity(shootVelocity);
+            obj.setMass((double) 4 / 3 * Math.PI * Math.pow(shootSize, 3));
+            obj.setRotationalInertia(2f / 5 * obj.getMass() * shootSize * shootSize);
             obj.setDeltaT(deltaT);
             obj.setTheta(shootSpin.getRadians());
 
@@ -243,4 +238,11 @@ public class ShootManager extends SceneManager {
         this.shootLineSteps = shootLineSteps;
     }
 
+    //This can be added under the wall bounce code in the prediction algorithm for bouncing off other particles
+    /*if (scene instanceof BounceCollisionScene s) {
+        for (DrawableElement element : scene.getDrawableElements()) {
+            if (!(element instanceof PhysicsObject obj2)) continue;
+            s.doPushCollision(obj1,obj2,obj1.getPos(),obj1.getVelocity(),obj1.getNetForce(),obj2.getPos(),obj2.getVelocity(),obj2.getNetForce(),.6,false,0); //This needs to be modified to accept the futurePos and futureVel
+        }
+    }*/
 }

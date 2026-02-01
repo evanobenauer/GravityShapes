@@ -18,7 +18,7 @@ public class BounceCollisionScene extends GravityScene {
 
     private final int baseSize;
 
-    private boolean drawGrid;
+    private final boolean drawGrid;
     private ObjectGrid collisionGrid;
 
     public BounceCollisionScene(int G, boolean wallBounce, boolean paths, boolean fieldLines, int objectCount, String spawnMode, int radius) {
@@ -120,7 +120,7 @@ public class BounceCollisionScene extends GravityScene {
     // Make sure it is a local variable object
     private class ObjectGrid {
 
-        private ArrayList<PhysicsObject>[][] array2D; //A 2D array of arraylists
+        private final ArrayList<PhysicsObject>[][] array2D; //A 2D array of arraylists
 
         private final int cellSize;
         private final Vector gridSize;

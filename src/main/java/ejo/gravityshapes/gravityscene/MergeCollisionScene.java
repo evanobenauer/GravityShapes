@@ -18,7 +18,7 @@ public class MergeCollisionScene extends GravityScene {
 
     @Override
     public void draw() {
-        drawableElements.forIQueued((e) -> {
+        drawableElements.forIQueued((e,i) -> {
             if (e instanceof PhysicsObject obj) {
                 //Update visual rotation
                 ((RegularPolygon) obj.getElement()).setRotation(new Angle(obj.getTheta()));
@@ -103,7 +103,7 @@ public class MergeCollisionScene extends GravityScene {
         //Set Average Polygon Type
         poly1.setVertexCount((int) Math.round(poly1.getVertexCount() * massWeight + poly2.getVertexCount() * (1 - massWeight)));
 
-        //============= Finalize ==============
+        //============= Attributes ==============
 
         //Set Averaged Position
         obj1.setPos(obj1.getPos().getMultiplied(massWeight).getAdded(obj2.getPos().getMultiplied(1 - massWeight)));
@@ -113,6 +113,8 @@ public class MergeCollisionScene extends GravityScene {
 
         //Set collision heat
         //setCollisionHeat(obj1,obj2,massWeight);
+
+        //============= Interactable ==============
 
         //Set Dragging
         if (((SpecialPhysicsObject) obj2).isDragging())
@@ -126,10 +128,13 @@ public class MergeCollisionScene extends GravityScene {
         }
         ((SpecialPhysicsObject) obj2).setLocked(false);
 
+        //============= Finalize ==============
+
         //Delete old object
         removeElement(obj2, true);
     }
 
+    @Deprecated
     private void setCollisionHeat(PhysicsObject obj1, PhysicsObject obj2, double massWeight) {
         Vector obj2RefVelocity = obj2.getVelocity().getSubtracted(obj1.getVelocity());
         int heat = (int)(.5f *obj2.getMass()*Math.pow(obj2RefVelocity.getMagnitude(),2)) /1000;
