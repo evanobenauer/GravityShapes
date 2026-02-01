@@ -33,7 +33,7 @@ Gravity Shapes has 6 main universal options users can toggle on and off
 *Field Lines*
 - Draws all gravitational field lines
     
-  ![gif](img/fieldlines.gif.gif)
+  ![gif](img/fieldLines.gif)
   
 # Object Shooter
 Clicking on the screen and pulling back will activate the object shooter
