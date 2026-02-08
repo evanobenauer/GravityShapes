@@ -2,7 +2,7 @@
 
 ![title](img/Title.gif.gif)
 
-Gravity Shapes is a mini applet developed ing Java using my AppNexus library for UI creation.
+Gravity Shapes is a mini application developed using Java using my AppNexus library for UI creation.
 This application created PhysicsObjects that orbit together with respect to Newtonian physics concepts such as:
 - Kinematics
 - Rotational Kinematics
