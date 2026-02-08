@@ -15,6 +15,7 @@ import ejo.gravityshapes.element.TitleButton;
 import ejo.gravityshapes.gravityscene.BounceCollisionScene;
 import ejo.gravityshapes.gravityscene.MergeCollisionScene;
 import ejo.gravityshapes.manager.StarManager;
+import ejo.gravityshapes.util.TitleBounceHandler;
 
 import java.awt.*;
 
@@ -28,7 +29,7 @@ public class TitleScene extends Scene {
 
     //Title
     private final Text titleText;
-    private double titleAnimationStep = 0;
+    private final TitleBounceHandler titleBounceHandler;
 
     //Setting Widgets
     public Slider<Integer> sliderObjectCount;
@@ -52,6 +53,7 @@ public class TitleScene extends Scene {
 
         //Init Title Element
         this.titleText = new Text(this, Vector.NULL(),"Gravity Shapes",new Font("Arial Black",Font.PLAIN,80),Color.WHITE, Text.Type.STATIC);
+        this.titleBounceHandler = new TitleBounceHandler(titleText,Vector.NULL());
 
         //Init Widgets
         initSettingWidgets(widgetColor);
@@ -74,7 +76,8 @@ public class TitleScene extends Scene {
     @Override
     public void draw() {
         updateStartButtonPositionsAndSettings();
-        updateTitlePosition(-80);
+        titleBounceHandler.setPos(getWindow().getSize().getSubtracted(titleText.getSize()).getMultiplied(.5).getAdded(0,-80));
+        titleBounceHandler.updatePos();
 
         //Draw Background
         new Rectangle(this,Vector.NULL(),getWindow().getSize(),new Color(25,25,25,255)).draw();
@@ -140,13 +143,6 @@ public class TitleScene extends Scene {
 
         this.sliderMergeObjectSizeMin.setPos(startMerge.getPos().getAdded(0,startMerge.getSize().getY() + 20));
         this.sliderMergeObjectSizeMax.setPos(sliderMergeObjectSizeMin.getPos().getAdded(0,sliderMergeObjectSizeMin.getSize().getY()).getAdded(0,5));
-    }
-
-    private void updateTitlePosition(int yOffset) {
-        titleText.setPos(getWindow().getSize().getSubtracted(titleText.getSize()).getMultiplied(.5).getAdded(0,yOffset));
-        titleText.setPos(titleText.getPos().getAdded(new Vector(0, Math.cos(titleAnimationStep) * 8)));
-        titleAnimationStep += 0.05;
-        if (titleAnimationStep >= Math.PI * 2) titleAnimationStep = 0;
     }
 
 }
