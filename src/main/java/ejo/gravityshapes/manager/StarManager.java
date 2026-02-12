@@ -1,7 +1,7 @@
 package ejo.gravityshapes.manager;
 
 import com.ejo.ui.Scene;
-import com.ejo.ui.element.shape.Rectangle;
+import com.ejo.ui.element.polygon.Rectangle;
 import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.action.DoOnce;
 import com.ejo.util.action.OnChange;

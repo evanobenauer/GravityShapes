@@ -1,7 +1,7 @@
 package ejo.gravityshapes.util;
 
 import com.ejo.ui.element.PhysicsObject;
-import com.ejo.ui.element.shape.RegularPolygon;
+import com.ejo.ui.element.polygon.RegularPolygon;
 import com.ejo.util.math.Vector;
 
 public class PhysicsUtil {

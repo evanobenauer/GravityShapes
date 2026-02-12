@@ -4,7 +4,7 @@ import com.ejo.ui.Scene;
 import com.ejo.ui.element.DrawableElement;
 import com.ejo.ui.element.Line;
 import com.ejo.ui.element.PhysicsObject;
-import com.ejo.ui.element.shape.RegularPolygon;
+import com.ejo.ui.element.polygon.RegularPolygon;
 import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.math.Vector;
 import ejo.gravityshapes.element.SimulatedParticle;

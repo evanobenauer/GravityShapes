@@ -1,7 +1,7 @@
 package ejo.gravityshapes.element;
 
 import com.ejo.ui.Scene;
-import com.ejo.ui.element.shape.RegularPolygon;
+import com.ejo.ui.element.polygon.RegularPolygon;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
 import org.lwjgl.opengl.GL11;
@@ -22,7 +22,7 @@ public class ObjectsPolygon extends RegularPolygon {
         super(scene, pos, color, radius, vertexCount);
     }
 
-    public void drawSillyOutline() {
+    public void drawBlueOutline() {
         Color c = new Color(0, 125, 200);
         GL11.glColor4f(c.getRed() / 255f, c.getGreen() / 255f, c.getBlue() / 255f, c.getAlpha() / 255f);
         GL11.glDisable(GL11.GL_LINE_STIPPLE);

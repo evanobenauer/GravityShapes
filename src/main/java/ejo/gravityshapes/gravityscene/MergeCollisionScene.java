@@ -2,7 +2,7 @@ package ejo.gravityshapes.gravityscene;
 
 import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.base.Tickable;
-import com.ejo.ui.element.shape.RegularPolygon;
+import com.ejo.ui.element.polygon.RegularPolygon;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
 import ejo.gravityshapes.element.SpecialPhysicsObject;
@@ -24,7 +24,7 @@ public class MergeCollisionScene extends GravityScene {
                 ((RegularPolygon) obj.getElement()).setRotation(new Angle(obj.getTheta()));
 
                 //Slow rotation back to stable over time? Like some kind of drag?
-                float slowSpeed = 1f;
+                float slowSpeed = 0f; //Currently disabled. I don't think I really like it...
                 if (Math.abs(obj.getOmega()) > 0) {
                     if (obj.getOmega() > 0) obj.setOmega(obj.getOmega() - slowSpeed / 360);
                     if (obj.getOmega() < 0) obj.setOmega(obj.getOmega() + slowSpeed / 360);

@@ -2,7 +2,7 @@ package ejo.gravityshapes;
 
 import com.ejo.ui.Scene;
 import com.ejo.ui.element.Text;
-import com.ejo.ui.element.shape.Rectangle;
+import com.ejo.ui.element.polygon.Rectangle;
 import com.ejo.ui.element.widget.Button;
 import com.ejo.ui.element.widget.settingwidget.Cycle;
 import com.ejo.ui.element.widget.settingwidget.Slider;
@@ -19,7 +19,7 @@ import ejo.gravityshapes.util.TitleBounceHandler;
 
 import java.awt.*;
 
-//TODO: Add collision particles
+//TODO: Add collision particles on impact
 // Add Force/Velocity vector lines option to main screen
 
 public class TitleScene extends Scene {
@@ -110,14 +110,14 @@ public class TitleScene extends Scene {
 
     private void initStartButtons(Color widgetColor) {
         this.startBounce = new TitleButton(this, Vector.NULL(),new Vector(200,200), widgetColor,"","Particles collide and bounce off of one another using momentum. This is VERY EXPERIMENTAL. My algorithm isnt great...",getClass().getResource("/collision.png"),() -> {
-            getWindow().setScene(new BounceCollisionScene(sliderG.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),sliderBounceObjectSize.getContainer().get()));
+            getWindow().setSceneTransitioned(new BounceCollisionScene(sliderG.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),sliderBounceObjectSize.getContainer().get()));
             SettingManager.DEFAULT_MANAGER.saveAll();
         });
 
         this.startMerge = new TitleButton(this, Vector.NULL(),new Vector(200,200), widgetColor,"","Particles collide and combine into larger particles",getClass().getResource("/merge.png"),() -> {
             int min = sliderMergeObjectSizeMin.getContainer().get();
             int max = sliderMergeObjectSizeMax.getContainer().get();
-            getWindow().setScene(new MergeCollisionScene(sliderG.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),min,max));
+            getWindow().setSceneTransitioned(new MergeCollisionScene(sliderG.getContainer().get(),toggleWallBounce.getContainer().get(),togglePaths.getContainer().get(),toggleFieldLines.getContainer().get(),sliderObjectCount.getContainer().get(),cycleSpawnPattern.getContainer().get(),min,max));
             SettingManager.DEFAULT_MANAGER.saveAll();
         });
 

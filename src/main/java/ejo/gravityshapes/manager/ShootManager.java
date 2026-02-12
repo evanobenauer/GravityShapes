@@ -4,7 +4,7 @@ import com.ejo.ui.Scene;
 import com.ejo.ui.element.DrawableElement;
 import com.ejo.ui.element.Line;
 import com.ejo.ui.element.PhysicsObject;
-import com.ejo.ui.element.shape.RegularPolygon;
+import com.ejo.ui.element.polygon.RegularPolygon;
 import com.ejo.ui.manager.SceneManager;
 import com.ejo.util.action.DoOnce;
 import com.ejo.util.math.Angle;
@@ -63,11 +63,8 @@ public class ShootManager extends SceneManager {
         this.shootSpin = new Angle(0, true);
         this.shootVertices = 0;
 
-        this.shooter = new DoOnce();
+        this.shooter = new DoOnce(false);
         this.shooterInitializer = new DoOnce();
-
-        this.shooter.run(() -> {
-        });
     }
 
 
@@ -146,8 +143,10 @@ public class ShootManager extends SceneManager {
                 if (!(element instanceof PhysicsObject p)) continue;
                 if (CollisionUtil.isColliding((RegularPolygon) particle.getAtPos(pos).getElement(), (RegularPolygon) p.getElement())) {
                     if (!(scene instanceof BounceCollisionScene))particle.setSteps(i); //Only call this if on combined mode
+                    particle.setSteps(i); //Only call this if on combined mode
                     return force;
                 }
+                if (G == 0) continue;
                 force.add(PhysicsUtil.getGravityField(G, p, pos).getMultiplied(obj.getMass()));
             }
             return force;

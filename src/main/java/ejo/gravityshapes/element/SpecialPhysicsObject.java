@@ -3,13 +3,12 @@ package ejo.gravityshapes.element;
 import com.ejo.ui.Scene;
 import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.base.Interactable;
-import com.ejo.ui.element.shape.RegularPolygon;
+import com.ejo.ui.element.polygon.RegularPolygon;
 import com.ejo.util.math.Vector;
 import ejo.gravityshapes.util.VectorUtil;
 import org.lwjgl.glfw.GLFW;
 
-import java.awt.*;
-
+//Just a physics object that can be locked, dragged, and has heat?
 public class SpecialPhysicsObject extends PhysicsObject implements Interactable {
 
     private boolean dragging;
@@ -34,7 +33,7 @@ public class SpecialPhysicsObject extends PhysicsObject implements Interactable 
     public void draw(Vector mousePos) {
         //drawWithHeat(mousePos);
         super.draw(mousePos);
-        if (locked) ((ObjectsPolygon)getPolygon()).drawSillyOutline();
+        if (locked) ((ObjectsPolygon)getPolygon()).drawBlueOutline();
     }
 
     @Override

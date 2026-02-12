@@ -4,7 +4,7 @@ import com.ejo.ui.Scene;
 import com.ejo.ui.Window;
 import com.ejo.ui.element.PhysicsObject;
 import com.ejo.ui.element.base.Tickable;
-import com.ejo.ui.element.shape.RegularPolygon;
+import com.ejo.ui.element.polygon.RegularPolygon;
 import com.ejo.ui.manager.DebugManager;
 import com.ejo.util.math.Angle;
 import com.ejo.util.math.Vector;
@@ -83,7 +83,7 @@ public abstract class GravityScene extends Scene {
     @Override
     public void onKeyPress(int key, int scancode, int action, int mods) {
         super.onKeyPress(key, scancode, action, mods);
-        if (key == GLFW.GLFW_KEY_ESCAPE) getWindow().setScene(new TitleScene());
+        if (key == GLFW.GLFW_KEY_ESCAPE) getWindow().setSceneTransitioned(new TitleScene());
     }
 
     private void generateObjectsRandomly(int count, int minM, int maxM, float density, float minV, float maxV, float deltaT) {
@@ -141,6 +141,8 @@ public abstract class GravityScene extends Scene {
     public ShootManager getShootManager() {
         return ((ShootManager) getSceneManagers().get(1));
     }
+
+
 
     private class GravityDebugManager extends DebugManager {
 
